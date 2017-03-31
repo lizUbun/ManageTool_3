@@ -65,17 +65,17 @@ public class MainActivity extends Activity {
         });
 
         // add the data into tools
-//        for (int i = 0 ; i < 30 ;i++) {
-//            Tools tools2 = new Tools();
-//            tools2.setName("name" + i  + System.currentTimeMillis());
-//        tools2.setAmount(1);
-//        tools2.saveThrows();
-//
-//        User user = new User();
-//        user.setName("user" + i + System.currentTimeMillis());
-//        user.setPass_word("password");
-//        user.saveThrows();
-//    }
+        for (int i = 0 ; i < 30 ;i++) {
+            Tools tools2 = new Tools();
+            tools2.setName("name" + i  + System.currentTimeMillis());
+            tools2.setAmount(1);
+            tools2.saveThrows();
+
+            User user = new User();
+            user.setName("user" + i + System.currentTimeMillis());
+            user.setPass_word("password");
+            user.saveThrows();
+    }
 //
 //    int i = DataSupport.findAll(Tools.class).size();
 //        Toast.makeText(this, "tools has  " + i, Toast.LENGTH_SHORT).show();

@@ -38,6 +38,10 @@ public class LookActivity extends Activity {
     TextView lookText8;
     ArrayList<TextView> lookTextList;
 
+    // the number of page
+    // 代表有多少页
+    int page = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,35 @@ public class LookActivity extends Activity {
                 // 隐藏软键盘
                 InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
+
+                // show all the data
+                // 显示所有数据
+                // 1.get all the tool info from the database
+                ArrayList<Tools> allTools = (ArrayList<Tools>)DataSupport.findAll(Tools.class);
+                // 2. get the amount of list
+                int total = allTools.size();
+                Toast.makeText(LookActivity.this, "total : " + total, Toast.LENGTH_SHORT).show();
+                // 3. get the page number
+                if (total / 8 > 1) {
+                    page = total / 8;
+                }else {
+                    page = 1;
+                }
+                // 4. show the first page
+                if (total > 8){
+                    for (int i = 0 ;i < 8 ; i++){
+                        lookTextList.get(i).setText(allTools.get(i).getName());
+                    }
+                }else{
+                    for (int i = 0 ;i < total;i++){
+                        lookTextList.get(i).setText(allTools.get(i).getName());
+                    }
+                }
+
+
+
+
+
             }
         });
 
