@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="demo" ></dbname>
+
+    <version value="7" ></version>
+
+    <list>
+        <mapping class="com.xlc.managetool_3.Tools"/>
+        <mapping class="com.xlc.managetool_3.User"></mapping>
+    </list>
+</litepal>
