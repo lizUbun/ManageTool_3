@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
         // add the data into tools
         for (int i = 0 ; i < 30 ;i++) {
             Tools tools2 = new Tools();
-            tools2.setName("name" + i  + System.currentTimeMillis());
+            tools2.setName("name :   " + i + "     " + System.currentTimeMillis());
             tools2.setAmount(1);
             tools2.saveThrows();
 
