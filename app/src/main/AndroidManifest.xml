@@ -22,7 +22,8 @@
         <activity
             android:name=".EditView"
             android:label="@string/title_activity_edit_view" />
-        <activity android:name=".BorrowListAcivity"></activity>
+        <activity android:name=".BorrowListAcivity" />
+        <activity android:name=".ConfirmBack"></activity>
     </application>
 
 </manifest>
