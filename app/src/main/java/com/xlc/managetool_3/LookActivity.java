@@ -27,7 +27,9 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     int r = Color.WHITE;
 
+    // turn to data edit activity
     Button showDatabase;
+    // show all the tools
     Button allButton;
     // next page
     Button nextPage;
@@ -36,6 +38,9 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // borrow list check
     // 查看工具借用情况
     Button borrowButton;
+    // confirm the borrow request
+    // 选择完成
+    Button select_over;
 
     TextView lookText1;
     TextView lookText2;
@@ -97,7 +102,8 @@ public class LookActivity extends Activity implements View.OnClickListener {
             public void onClick(View v) {
                 // hide the soft keyboard
                 // 隐藏软键盘
-                InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(
+                        getApplicationContext().INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
 
                 // show all the data
@@ -179,6 +185,21 @@ public class LookActivity extends Activity implements View.OnClickListener {
             }
         });
 
+        // when the select operation over
+        select_over.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // if had selected the tools
+                if (selected.size() != 0){
+                    Intent intent = new Intent(LookActivity.this,ConfirmSelect.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(LookActivity.this, "请先选择工具", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         // select the data on screen
         // 通过触屏选择数据
         addTextViewListener(lookTextList);
@@ -188,6 +209,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     }
 
+    // select the tools listener
     private void addTextViewListener(ArrayList<TextView> lookTextList) {
         for (int i = 0 ;i < lookTextList.size();i++){
             lookTextList.get(i).setOnClickListener(this);
@@ -236,6 +258,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         nextPage = (Button)findViewById(R.id.look_next_page);
         lastPage = (Button)findViewById(R.id.look_last_page);
         borrowButton = (Button)findViewById(R.id.borrow_button);
+        select_over = (Button)findViewById(R.id.select_sure);
 
         // init the background color
         initTextViewBackground();
@@ -283,3 +306,10 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     }
 }
+
+
+/*
+    2017.4.2
+    * implement the borrow function
+    * 实现借用功能
+ */

@@ -93,6 +93,7 @@ public class MainActivity extends Activity {
             user.put(users.get(i).getName(),users.get(i).getPass_word());
         }
         // 2 check
+        // and if succeed then turn to look the tool list
         if (input_name.equals("root") && input_password.equals("root")) {
             Intent intent = new Intent(MainActivity.this, LookActivity.class);
             startActivity(intent);
@@ -103,6 +104,12 @@ public class MainActivity extends Activity {
                     Toast.LENGTH_SHORT).show();
 
         }
+
+        // 3 record this login
+        User user = new User();
+        user.setName(input_name);
+        user.setPass_word(input_password);
+        user.saveThrows();
     }
 }
 
@@ -110,4 +117,7 @@ public class MainActivity extends Activity {
 /*
         2017.3.26
         * construct the database
+        4.1
+        * add the user login record
+        * 加入了用户登陆（无论成功或者失败）的记录
  */
