@@ -33,6 +33,9 @@ public class LookActivity extends Activity implements View.OnClickListener {
     Button nextPage;
     // last page
     Button lastPage;
+    // borrow list check
+    // 查看工具借用情况
+    Button borrowButton;
 
     TextView lookText1;
     TextView lookText2;
@@ -167,9 +170,20 @@ public class LookActivity extends Activity implements View.OnClickListener {
             }
         });
 
+        // borrow button listener
+        borrowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LookActivity.this,BorrowListAcivity.class);
+                startActivity(intent);
+            }
+        });
+
         // select the data on screen
         // 通过触屏选择数据
         addTextViewListener(lookTextList);
+
+
 
 
     }
@@ -221,6 +235,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // button
         nextPage = (Button)findViewById(R.id.look_next_page);
         lastPage = (Button)findViewById(R.id.look_last_page);
+        borrowButton = (Button)findViewById(R.id.borrow_button);
 
         // init the background color
         initTextViewBackground();

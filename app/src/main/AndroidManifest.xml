@@ -21,7 +21,8 @@
         <activity android:name=".DatabaseView" />
         <activity
             android:name=".EditView"
-            android:label="@string/title_activity_edit_view"></activity>
+            android:label="@string/title_activity_edit_view" />
+        <activity android:name=".BorrowListAcivity"></activity>
     </application>
 
 </manifest>
