@@ -139,7 +139,8 @@
         android:layout_marginLeft="16dp"
         android:text="确认借出"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="423dp" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/selected_give_time" />
 
     <TextView
         android:id="@+id/textView23"
@@ -192,7 +193,8 @@
         android:layout_marginLeft="12dp"
         android:text="取消"
         app:layout_constraintLeft_toRightOf="@+id/selected_givie_ok"
-        tools:layout_editor_absoluteY="423dp" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/selected_give_time" />
 
     <TextView
         android:id="@+id/textView25"

@@ -1,9 +1,10 @@
 package com.xlc.managetool_3;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class ConfirmBack extends AppCompatActivity {
+public class ConfirmBack extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
