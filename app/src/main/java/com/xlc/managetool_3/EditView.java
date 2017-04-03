@@ -27,14 +27,10 @@ public class EditView extends Activity {
     TextView name;
     @BindView(R.id.edit_name_input)
     EditText editNameInput;
-    @BindView(R.id.view_class)
-    TextView viewClass;
     @BindView(R.id.edit_class_input)
     EditText editClassInput;
     @BindView(R.id.edit_amount_input)
-    TextView editAmountInput2;
-    @BindView(R.id.edit_amount_input)
-    EditText editAmountInput;
+    TextView editAmountInput;
     @BindView(R.id.save_edit)
     Button saveEdit;
 
@@ -45,7 +41,8 @@ public class EditView extends Activity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.edit_add_button, R.id.edit_delete_button, R.id.edit_button, R.id.edit_search_button, R.id.save_edit})
+    @OnClick({R.id.edit_add_button, R.id.edit_delete_button,
+            R.id.edit_button, R.id.edit_search_button, R.id.save_edit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.edit_add_button:
