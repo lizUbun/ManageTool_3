@@ -224,7 +224,7 @@
         app:layout_constraintTop_toBottomOf="@+id/return_tool_accept_name" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -243,7 +243,7 @@
         android:layout_marginTop="8dp"
         android:text="确认归还"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/note" />
 
     <Button
         android:id="@+id/return_cancel"
@@ -253,5 +253,5 @@
         android:layout_marginTop="8dp"
         android:text="取消"
         app:layout_constraintLeft_toRightOf="@+id/return_tool_ok"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/note" />
 </android.support.constraint.ConstraintLayout>

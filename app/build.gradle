@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+// apply plugin here
+// csdn  way ok
+apply plugin: 'com.jakewharton.butterknife'
+// git hub way , can't use
+//apply plugin: 'com.neenbedankt.android-apt'
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -29,4 +35,18 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:appcompat-v7:25.3.0'
     testCompile 'junit:junit:4.12'
+
+    // the frame of butter knife
+//    apply plugin: 'com.neenbedankt.android-apt'
+//    compile 'com.jakewharton:butterknife:8.5.1'
+//    apt 'com.jakewharton:butterknife-compiler:8.5.1'
+
+    // git hub install way
+//    compile 'com.jakewharton:butterknife:8.5.1'
+//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
+    // csdn
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
 }
