@@ -35,12 +35,12 @@ public class MainActivity extends Activity {
         SQLiteDatabase db = LitePal.getDatabase();
 //        LookActivity.initData();
         mContext = getApplicationContext();
-        sure = (Button)findViewById(R.id.sure);
-        clear = (Button)findViewById(R.id.clear);
+        sure = (Button)findViewById(R.id.main_activity_sure);
+        clear = (Button)findViewById(R.id.main_activity_clear);
 
         user = new HashMap<>();
-        name = (EditText)findViewById(R.id.name);
-        pass_word = (EditText)findViewById(R.id.pass_word);
+        name = (EditText)findViewById(R.id.main_activity_name);
+        pass_word = (EditText)findViewById(R.id.main_activity_pass_word);
 
 
         sure.setOnClickListener(new View.OnClickListener() {
@@ -75,8 +75,9 @@ public class MainActivity extends Activity {
             user.setName("user" + i + System.currentTimeMillis());
             user.setPass_word("password");
             user.saveThrows();
-    }
-//
+        }
+
+        //
 //    int i = DataSupport.findAll(Tools.class).size();
 //        Toast.makeText(this, "tools has  " + i, Toast.LENGTH_SHORT).show();
 //    int j = DataSupport.findAll(User.class).size();

@@ -73,8 +73,8 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
         // init the database
         SQLiteDatabase db = LitePal.getDatabase();
-        showDatabase = (Button)findViewById(R.id.show_databse);
-        allButton = (Button)findViewById(R.id.all_tool);
+        showDatabase = (Button)findViewById(R.id.look_activity_show_databse);
+        allButton = (Button)findViewById(R.id.look_activity_all_tool);
 
         initText();
 
@@ -235,15 +235,15 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     // add the text view into array list
     private void initText() {
-        lookText1 = (TextView)findViewById(R.id.look_text1);
-        lookText2 = (TextView)findViewById(R.id.look_text2);
-        lookText3 = (TextView)findViewById(R.id.look_text3);
-        lookText4 = (TextView)findViewById(R.id.look_text4);
-        lookText5 = (TextView)findViewById(R.id.look_text5);
-        lookText6 = (TextView)findViewById(R.id.look_text6);
-        lookText7 = (TextView)findViewById(R.id.look_text7);
-        lookText8 = (TextView)findViewById(R.id.look_text8);
-        pageNumber = (TextView)findViewById(R.id.look_page);
+        lookText1 = (TextView)findViewById(R.id.look_activity_look_text1);
+        lookText2 = (TextView)findViewById(R.id.look_activity_look_text2);
+        lookText3 = (TextView)findViewById(R.id.look_activity_look_text3);
+        lookText4 = (TextView)findViewById(R.id.look_activity_look_text4);
+        lookText5 = (TextView)findViewById(R.id.look_activity_look_text5);
+        lookText6 = (TextView)findViewById(R.id.look_activity_look_text6);
+        lookText7 = (TextView)findViewById(R.id.look_activity_look_text7);
+        lookText8 = (TextView)findViewById(R.id.look_activity_look_text8);
+        pageNumber = (TextView)findViewById(R.id.look_activity_look_page);
         lookTextList = new ArrayList<>();
         lookTextList.add(lookText1);
         lookTextList.add(lookText2);
@@ -255,10 +255,10 @@ public class LookActivity extends Activity implements View.OnClickListener {
         lookTextList.add(lookText8);
 
         // button
-        nextPage = (Button)findViewById(R.id.look_next_page);
-        lastPage = (Button)findViewById(R.id.look_last_page);
-        borrowButton = (Button)findViewById(R.id.borrow_button);
-        select_over = (Button)findViewById(R.id.select_sure);
+        nextPage = (Button)findViewById(R.id.look_activity_look_next_page);
+        lastPage = (Button)findViewById(R.id.look_activity_look_last_page);
+        borrowButton = (Button)findViewById(R.id.look_activity_borrow_button);
+        select_over = (Button)findViewById(R.id.look_activity_select_sure);
 
         // init the background color
         initTextViewBackground();
@@ -287,14 +287,14 @@ public class LookActivity extends Activity implements View.OnClickListener {
             // selected the tool
 
             switch (v.getId()){
-                case R.id.text_view1 : n = 1;
-                case R.id.text_view2 : n = 2;
-                case R.id.text_view3 : n = 3;
-                case R.id.text_view4 : n = 4;
-                case R.id.text_view5 : n = 5;
-                case R.id.text_view6 : n = 6;
-                case R.id.text_view7 : n = 7;
-                case R.id.text_view8 : n = 8;
+                case R.id.look_activity_look_text1 : n = 1;
+                case R.id.look_activity_look_text2 : n = 2;
+                case R.id.look_activity_look_text3 : n = 3;
+                case R.id.look_activity_look_text4 : n = 4;
+                case R.id.look_activity_look_text5 : n = 5;
+                case R.id.look_activity_look_text6 : n = 6;
+                case R.id.look_activity_look_text7 : n = 7;
+                case R.id.look_activity_look_text8 : n = 8;
             }
             selected.add((page - 1 ) * 8 + n);
 

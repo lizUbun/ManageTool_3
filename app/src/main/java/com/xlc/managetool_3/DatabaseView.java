@@ -14,73 +14,74 @@ import butterknife.OnClick;
 
 public class DatabaseView extends Activity {
 
-    @BindView(R.id.name_button)
-    Button nameButton;
-    @BindView(R.id.class_button)
-    Button classButton;
-    @BindView(R.id.amount_button)
-    Button amountButton;
-    @BindView(R.id.id_button)
-    Button idButton;
-    @BindView(R.id.text_view1)
-    TextView textView1;
-    @BindView(R.id.text_view3)
-    TextView textView3;
-    @BindView(R.id.text_view4)
-    TextView textView4;
-    @BindView(R.id.text_view5)
-    TextView textView5;
-    @BindView(R.id.text_view6)
-    TextView textView6;
-    @BindView(R.id.text_view7)
-    TextView textView7;
-    @BindView(R.id.text_view8)
-    TextView textView8;
-    @BindView(R.id.text_view2)
-    TextView textView2;
-    @BindView(R.id.button)
-    Button button;
-    @BindView(R.id.searchView)
-    SearchView searchView;
-    @BindView(R.id.page)
-    TextView page;
-    @BindView(R.id.last_page)
-    Button lastPage;
-    @BindView(R.id.next_page)
-    Button nextPage;
-    private Button editMode;
+
+    @BindView(R.id.show_database_edit_button)
+    Button showDatabaseEditButton;
+    @BindView(R.id.show_database_name_button)
+    Button showDatabaseNameButton;
+    @BindView(R.id.show_database_class_button)
+    Button showDatabaseClassButton;
+    @BindView(R.id.show_database_amount_button)
+    Button showDatabaseAmountButton;
+    @BindView(R.id.show_database_id_button)
+    Button showDatabaseIdButton;
+    @BindView(R.id.show_database_text_view1)
+    TextView showDatabaseTextView1;
+    @BindView(R.id.show_database_text_view3)
+    TextView showDatabaseTextView3;
+    @BindView(R.id.show_database_text_view4)
+    TextView showDatabaseTextView4;
+    @BindView(R.id.show_database_text_view5)
+    TextView showDatabaseTextView5;
+    @BindView(R.id.show_database_text_view6)
+    TextView showDatabaseTextView6;
+    @BindView(R.id.show_database_text_view7)
+    TextView showDatabaseTextView7;
+    @BindView(R.id.show_database_text_view8)
+    TextView showDatabaseTextView8;
+    @BindView(R.id.show_database_text_view2)
+    TextView showDatabaseTextView2;
+    @BindView(R.id.show_database_button)
+    Button showDatabaseButton;
+    @BindView(R.id.show_database_searchView)
+    SearchView showDatabaseSearchView;
+    @BindView(R.id.show_database_page)
+    TextView showDatabasePage;
+    @BindView(R.id.show_database_last_page)
+    Button showDatabaseLastPage;
+    @BindView(R.id.show_database_next_page)
+    Button showDatabaseNextPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_view);
         ButterKnife.bind(this);
-        editMode = (Button) findViewById(R.id.edit_button);
-        editMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DatabaseView.this, EditView.class);
-                startActivity(intent);
-            }
-        });
     }
 
-    @OnClick({R.id.name_button, R.id.class_button, R.id.amount_button, R.id.id_button, R.id.button, R.id.last_page, R.id.next_page})
+
+    @OnClick(R.id.show_database_edit_button)
+    public void onViewClicked() {
+        Intent intent = new Intent(DatabaseView.this, EditView.class);
+        startActivity(intent);
+    }
+
+    @OnClick({R.id.show_database_name_button, R.id.show_database_class_button, R.id.show_database_amount_button, R.id.show_database_id_button, R.id.show_database_button, R.id.show_database_last_page, R.id.show_database_next_page})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.name_button:
+            case R.id.show_database_name_button:
                 break;
-            case R.id.class_button:
+            case R.id.show_database_class_button:
                 break;
-            case R.id.amount_button:
+            case R.id.show_database_amount_button:
                 break;
-            case R.id.id_button:
+            case R.id.show_database_id_button:
                 break;
-            case R.id.button:
+            case R.id.show_database_button:
                 break;
-            case R.id.last_page:
+            case R.id.show_database_last_page:
                 break;
-            case R.id.next_page:
+            case R.id.show_database_next_page:
                 break;
         }
     }

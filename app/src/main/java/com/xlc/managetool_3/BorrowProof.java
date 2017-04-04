@@ -55,5 +55,51 @@ public class BorrowProof extends DataSupport {
     String borrowTime;
     String giver;
     String toolsName;
+    Integer amount;
+    String giveBacker;
+    String giveBackReceiver;
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public String getGiveBacker() {
+        return giveBacker;
+    }
+
+    public void setGiveBacker(String giveBacker) {
+        this.giveBacker = giveBacker;
+    }
+
+    public String getGiveBackReceiver() {
+        return giveBackReceiver;
+    }
+
+    public void setGiveBackReceiver(String giveBackReceiver) {
+        this.giveBackReceiver = giveBackReceiver;
+    }
+
+    public String getRecevTime() {
+        return recevTime;
+    }
+
+    public void setRecevTime(String recevTime) {
+        this.recevTime = recevTime;
+    }
+
+    public String getDeviceState() {
+        return deviceState;
+    }
+
+    public void setDeviceState(String deviceState) {
+        this.deviceState = deviceState;
+    }
+
+    String recevTime;
+    String deviceState;
 
 }
