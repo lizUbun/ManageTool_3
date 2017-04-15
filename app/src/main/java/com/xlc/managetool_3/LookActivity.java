@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -15,18 +19,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xlc.tool.ManageTool;
+
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class LookActivity extends Activity implements View.OnClickListener {
-
-
     int r = Color.WHITE;
-
     // turn to data edit activity
     Button showDatabase;
     // show all the tools
@@ -41,7 +42,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // confirm the borrow request
     // 选择完成
     Button select_over;
-
     TextView lookText1;
     TextView lookText2;
     TextView lookText3;
@@ -52,11 +52,9 @@ public class LookActivity extends Activity implements View.OnClickListener {
     TextView lookText8;
     ArrayList<TextView> lookTextList;
     TextView pageNumber;
-
     // the number of page
     // 代表有多少页
     int page = 0;
-
     // the record of data
     int total = 0;
     // all the tools record
@@ -65,6 +63,11 @@ public class LookActivity extends Activity implements View.OnClickListener {
     ArrayList<Integer> selected;
     // the number of selected in one page
     int n;
+    // handler mechanism
+    Handler handler;
+
+    // all data control service
+    AllDataControl allDataControl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +76,21 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
         // init the database
         SQLiteDatabase db = LitePal.getDatabase();
-        showDatabase = (Button)findViewById(R.id.look_activity_show_databse);
-        allButton = (Button)findViewById(R.id.look_activity_all_tool);
+        showDatabase = (Button) findViewById(R.id.look_activity_show_databse);
+        allButton = (Button) findViewById(R.id.look_activity_all_tool);
 
         initText();
-
+        // show the init data
+        // 显示所有工具的第一页
+        initGraphic();
 
         // 1.get all the tool info from the database
-        allTools = (ArrayList<Tools>)DataSupport.findAll(Tools.class);
+        allTools = (ArrayList<Tools>) DataSupport.findAll(Tools.class);
         // 2. get the amount of list
         total = allTools.size();
+
+        // start the data control service
+        startService(new Intent(this,AllDataControl.class));
 
         /*
             turn to the view of database
@@ -90,7 +98,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         showDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LookActivity.this,DatabaseView.class);
+                Intent intent = new Intent(LookActivity.this, DatabaseView.class);
                 startActivity(intent);
             }
         });
@@ -104,7 +112,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
                 // 隐藏软键盘
                 InputMethodManager imm = (InputMethodManager) getSystemService(
                         getApplicationContext().INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
                 // show all the data
                 // 显示所有数据
@@ -117,12 +125,12 @@ public class LookActivity extends Activity implements View.OnClickListener {
 //                    page = 1;
 //                }
                 // 4. show the first page
-                if (total > 8){
-                    for (int i = 0 ;i < 8 ; i++){
+                if (total > 8) {
+                    for (int i = 0; i < 8; i++) {
                         lookTextList.get(i).setText(allTools.get(i).getName());
                     }
-                }else{
-                    for (int i = 0 ;i < total;i++){
+                } else {
+                    for (int i = 0; i < total; i++) {
                         lookTextList.get(i).setText(allTools.get(i).getName());
                     }
                 }
@@ -143,14 +151,14 @@ public class LookActivity extends Activity implements View.OnClickListener {
                 // judge the page range
                 // 判断page范围
                 int max = total / 8;
-                page ++;
-                if (page > max){
+                page++;
+                if (page > max) {
                     page = max;
                 }
                 pageNumber.setText(page + " / " + max);
                 // show the data according to the page
                 // 根据页码显示数据
-                showDataAccordPage(lookTextList,allTools,page);
+                showDataAccordPage(lookTextList, allTools, page);
 
                 // init background color
                 initTextViewBackground();
@@ -160,8 +168,8 @@ public class LookActivity extends Activity implements View.OnClickListener {
         lastPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                page --;
-                if (page < 1){
+                page--;
+                if (page < 1) {
                     page = 1;
                 }
                 int max = total / 8;
@@ -169,10 +177,22 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
                 // show the data according to the page
                 // 根据页码显示数据
-                showDataAccordPage(lookTextList,allTools,page);
+                showDataAccordPage(lookTextList, allTools, page);
 
                 // init background color
                 initTextViewBackground();
+
+                // send the massage
+//                DataThread dataThread = new DataThread();
+//                Thread thread = new Thread(dataThread);
+//                System.out.println("start thread ...");
+//                thread.start();
+
+                // 2
+//                Message message = new Message();
+//                message.what = ManageTool.FLUSH_DATA_OVER;
+//                handler.sendMessage(message);
+
             }
         });
 
@@ -180,7 +200,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         borrowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LookActivity.this,BorrowListAcivity.class);
+                Intent intent = new Intent(LookActivity.this, BorrowListAcivity.class);
                 startActivity(intent);
             }
         });
@@ -190,11 +210,10 @@ public class LookActivity extends Activity implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 // if had selected the tools
-                if (selected.size() != 0){
-                    Intent intent = new Intent(LookActivity.this,ConfirmSelect.class);
+                if (selected.size() != 0) {
+                    Intent intent = new Intent(LookActivity.this, ConfirmSelect.class);
                     startActivity(intent);
-                }
-                else{
+                } else {
                     Toast.makeText(LookActivity.this, "请先选择工具", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -204,14 +223,61 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // 通过触屏选择数据
         addTextViewListener(lookTextList);
 
+        // handler mechanism
+//        handler = new Handler(){
+//            @Override
+//            public void handleMessage(Message msg) {
+//                super.handleMessage(msg);
+//                // flush the ui
+//                // 如果数据发生改变，收到消息，更新ui
+//                if (msg.what == ManageTool.FLUSH_DATA_OVER){
+//                    lookText1.setText("data flush over..."   );
+//                }
+//            }
+//        };
 
+    }
+
+    // show the data
+    // 第一次显示初始化的数据
+    private void initGraphic() {
+        // make the data state init
+        // 将数据状态置为初始状态
+//        AllDataControl.data_state = AllDataControl.DATA_STATE_INIT;
+//        Message message = new Message();
+//        message.what = AllDataControl.DATA_STATE_INIT;
+//        handler = new Handler();
+//        handler.sendMessage(message);
+        if (AllDataControl.display != null){
+            if (AllDataControl.display.size() >= 8){
+                for (int i = 0 ;i < 8;i++){
+                    lookTextList.get(i).setText(AllDataControl.display.get(i));
+                }
+            }
+            if(AllDataControl.display.size() < 8){
+                for (int i=0;i < AllDataControl.display.size();i++){
+                    lookTextList.get(i).setText(AllDataControl.display.get(i));
+                }
+            }
+        }
+        if (AllDataControl.display == null){
+            ArrayList<Tools> tools = (ArrayList)DataSupport.findAll(Tools.class);
+            ArrayList<String> content = new ArrayList<>();
+            for (int i = 0;i < tools.size();i++){
+                content.add(tools.get(i).getName() + "  数量 ： " + tools.get(i).getAmount());
+                if (i < 8){
+                    lookTextList.get(i).setText(content.get(i));
+                }
+            }
+
+        }
 
 
     }
 
     // select the tools listener
     private void addTextViewListener(ArrayList<TextView> lookTextList) {
-        for (int i = 0 ;i < lookTextList.size();i++){
+        for (int i = 0; i < lookTextList.size(); i++) {
             lookTextList.get(i).setOnClickListener(this);
         }
     }
@@ -220,7 +286,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // 根据页码显示数据
     private void showDataAccordPage(ArrayList<TextView> lookTextList, ArrayList<Tools> allTools, int page) {
         // 0. add the data 8 times in for loop
-        for (int i = 0;i < 8;i++) {
+        for (int i = 0; i < 8; i++) {
             // 1. according to the page select the data
             // 根据页码选择数据
             /*
@@ -234,16 +300,17 @@ public class LookActivity extends Activity implements View.OnClickListener {
     }
 
     // add the text view into array list
+    // 初始化显示界面
     private void initText() {
-        lookText1 = (TextView)findViewById(R.id.look_activity_look_text1);
-        lookText2 = (TextView)findViewById(R.id.look_activity_look_text2);
-        lookText3 = (TextView)findViewById(R.id.look_activity_look_text3);
-        lookText4 = (TextView)findViewById(R.id.look_activity_look_text4);
-        lookText5 = (TextView)findViewById(R.id.look_activity_look_text5);
-        lookText6 = (TextView)findViewById(R.id.look_activity_look_text6);
-        lookText7 = (TextView)findViewById(R.id.look_activity_look_text7);
-        lookText8 = (TextView)findViewById(R.id.look_activity_look_text8);
-        pageNumber = (TextView)findViewById(R.id.look_activity_look_page);
+        lookText1 = (TextView) findViewById(R.id.look_activity_look_text1);
+        lookText2 = (TextView) findViewById(R.id.look_activity_look_text2);
+        lookText3 = (TextView) findViewById(R.id.look_activity_look_text3);
+        lookText4 = (TextView) findViewById(R.id.look_activity_look_text4);
+        lookText5 = (TextView) findViewById(R.id.look_activity_look_text5);
+        lookText6 = (TextView) findViewById(R.id.look_activity_look_text6);
+        lookText7 = (TextView) findViewById(R.id.look_activity_look_text7);
+        lookText8 = (TextView) findViewById(R.id.look_activity_look_text8);
+        pageNumber = (TextView) findViewById(R.id.look_activity_look_page);
         lookTextList = new ArrayList<>();
         lookTextList.add(lookText1);
         lookTextList.add(lookText2);
@@ -255,10 +322,10 @@ public class LookActivity extends Activity implements View.OnClickListener {
         lookTextList.add(lookText8);
 
         // button
-        nextPage = (Button)findViewById(R.id.look_activity_look_next_page);
-        lastPage = (Button)findViewById(R.id.look_activity_look_last_page);
-        borrowButton = (Button)findViewById(R.id.look_activity_borrow_button);
-        select_over = (Button)findViewById(R.id.look_activity_select_sure);
+        nextPage = (Button) findViewById(R.id.look_activity_look_next_page);
+        lastPage = (Button) findViewById(R.id.look_activity_look_last_page);
+        borrowButton = (Button) findViewById(R.id.look_activity_borrow_button);
+        select_over = (Button) findViewById(R.id.look_activity_select_sure);
 
         // init the background color
         initTextViewBackground();
@@ -269,12 +336,13 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     }
 
+    // init the text view background into white
+    // 将背景颜色设置为白色
     private void initTextViewBackground() {
-        for (int i = 0 ;i < lookTextList.size();i++){
+        for (int i = 0; i < lookTextList.size(); i++) {
             lookTextList.get(i).setBackgroundColor(Color.WHITE);
         }
     }
-
 
     // all the text view on click listen
     // 所有显示数据的text view 的点击监听
@@ -282,29 +350,65 @@ public class LookActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         // change the background color
         // 改变被选择的text view的背景颜色
-        if (r == Color.WHITE){
+        if (r == Color.WHITE) {
             r = Color.GREEN;
             // selected the tool
 
-            switch (v.getId()){
-                case R.id.look_activity_look_text1 : n = 1;
-                case R.id.look_activity_look_text2 : n = 2;
-                case R.id.look_activity_look_text3 : n = 3;
-                case R.id.look_activity_look_text4 : n = 4;
-                case R.id.look_activity_look_text5 : n = 5;
-                case R.id.look_activity_look_text6 : n = 6;
-                case R.id.look_activity_look_text7 : n = 7;
-                case R.id.look_activity_look_text8 : n = 8;
+            switch (v.getId()) {
+                case R.id.look_activity_look_text1:
+                    n = 1;
+                case R.id.look_activity_look_text2:
+                    n = 2;
+                case R.id.look_activity_look_text3:
+                    n = 3;
+                case R.id.look_activity_look_text4:
+                    n = 4;
+                case R.id.look_activity_look_text5:
+                    n = 5;
+                case R.id.look_activity_look_text6:
+                    n = 6;
+                case R.id.look_activity_look_text7:
+                    n = 7;
+                case R.id.look_activity_look_text8:
+                    n = 8;
             }
-            selected.add((page - 1 ) * 8 + n);
+            selected.add((page - 1) * 8 + n);
 
-        }else{
+        } else {
             r = Color.WHITE;
         }
         v.setBackgroundColor(r);
 
 
     }
+
+    // new thread deal the data
+    // 再新的线程里处理数据操作
+    class DataThread implements Runnable{
+        @Override
+        public void run() {
+//            Looper.prepare();
+//            Message message = new Message();
+//            message.what = ManageTool.FLUSH_DATA_OVER;
+//            handler.sendMessage(message);
+//            System.out.println("run ... ");
+//            Handler h = new Handler(){
+//                @Override
+//                public void handleMessage(Message msg) {
+//                    if (msg.what == AllDataControl.DATA_STATE_INIT){
+//                        ArrayList<Tools> list = (ArrayList)DataSupport.findAll(Tools.class);
+//                        ArrayList<String> displayString = new ArrayList<>();
+//                        for (int i = 0 ; i < list.size();i++){
+//                            displayString.add(list.get(i).getName() + " 数量 : " + list.get(i).getAmount());
+//                        }
+//                        AllDataControl.display = displayString;
+//                    }
+//                }
+//            };
+
+        }
+    }
+
 }
 
 
