@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,9 +27,15 @@ import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LookActivity extends Activity implements View.OnClickListener {
     int r = Color.WHITE;
+    ColorDrawable colorDrawableNow = null;
+    Drawable drawable = null;
+    Drawable drawableWhite = null;
+    Drawable drawableGreen = null;
+    ArrayList<Drawable> drawableList = null;
     // turn to data edit activity
     Button showDatabase;
     // show all the tools
@@ -64,7 +72,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // the number of selected in one page
     int n;
     // handler mechanism
-    Handler handler;
+//    Handler handler;
 
     // all data control service
     AllDataControl allDataControl;
@@ -78,6 +86,17 @@ public class LookActivity extends Activity implements View.OnClickListener {
         SQLiteDatabase db = LitePal.getDatabase();
         showDatabase = (Button) findViewById(R.id.look_activity_show_databse);
         allButton = (Button) findViewById(R.id.look_activity_all_tool);
+        colorDrawableNow = (ColorDrawable) getResources().getDrawable(R.drawable.white_text_view);
+        // initial drawable and it's array list
+        // 初始化背景颜色和其列表
+        drawableWhite = getResources().getDrawable(R.drawable.white_text_view);
+        drawableGreen = getResources().getDrawable(R.drawable.green_text_view);
+        drawableList = new ArrayList<>();
+        drawableList.add(drawableWhite);
+        drawableList.add(drawableGreen);
+        drawable = drawableList.get(0);
+        drawableWhite = drawableList.get(1);
+        drawableGreen = drawableList.get(1);
 
         initText();
         // show the init data
@@ -156,11 +175,21 @@ public class LookActivity extends Activity implements View.OnClickListener {
                     page = max;
                 }
                 pageNumber.setText(page + " / " + max);
+//                // save the selected tools
+//                // 保存选中的工具
+//                for (int i = 0 ;i < lookTextList.size();i++){
+//                    ColorDrawable cd = (ColorDrawable)lookTextList.get(i).getBackground();
+//                    if (cd.getColor() == 0x0f0){
+//                        Toast.makeText(LookActivity.this, "select : " + i , Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+
                 // show the data according to the page
                 // 根据页码显示数据
                 showDataAccordPage(lookTextList, allTools, page);
 
                 // init background color
+                //  初始化显示的背景颜色
                 initTextViewBackground();
             }
         });
@@ -200,22 +229,42 @@ public class LookActivity extends Activity implements View.OnClickListener {
         borrowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(LookActivity.this, BorrowListAcivity.class);
                 startActivity(intent);
             }
         });
 
         // when the select operation over
+        // 选择完毕跳转到确认页面
         select_over.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // clear the empty element
+                // 将选择的数组中空的数据去除
+                ArrayList<Integer> selectNoEmpty = new ArrayList<Integer>();
+                for (int i = 0 ; i < selected.size();i++){
+                    if (selected.get(i) != 0){
+                        selectNoEmpty.add(selected.get(i));
+                    }
+                }
+                selected = selectNoEmpty;
+
                 // if had selected the tools
-                if (selected.size() != 0) {
+//                if (selected.size() != 0) {
+//                    AllDataControl.selected_tools = selected;
+//                    Intent intent = new Intent(LookActivity.this, ConfirmSelect.class);
+//                    startActivity(intent);
+//                } else {
+//                    Toast.makeText(LookActivity.this, "请先选择工具", Toast.LENGTH_SHORT).show();
+//                }
+                if (AllDataControl.selected_tools.size() != 0){
+//                    AllDataControl.selected_tools = selected;
                     Intent intent = new Intent(LookActivity.this, ConfirmSelect.class);
                     startActivity(intent);
-                } else {
-                    Toast.makeText(LookActivity.this, "请先选择工具", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
 
@@ -272,6 +321,9 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
         }
 
+        // init the selected tools list
+        AllDataControl.selected_tools = new ArrayList<>();
+        AllDataControl.selectedToolsMap = new HashMap<>();
 
     }
 
@@ -340,7 +392,15 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // 将背景颜色设置为白色
     private void initTextViewBackground() {
         for (int i = 0; i < lookTextList.size(); i++) {
-            lookTextList.get(i).setBackgroundColor(Color.WHITE);
+//            lookTextList.get(i).setBackgroundColor(Color.WHITE);
+//            ColorDrawable colorDrawable = (ColorDrawable)getResources().getDrawable(R.drawable.white_text_view);
+//            colorDrawableNow = new ColorDrawable();
+//            colorDrawableNow = colorDrawable;
+//            lookTextList.get(i).setBackgroundDrawable(colorDrawable);
+
+//            Drawable drawable = getResources().getDrawable(R.drawable.white_text_view);
+            drawable = drawableList.get(0);
+            lookTextList.get(i).setBackground(drawable);
         }
     }
 
@@ -350,34 +410,140 @@ public class LookActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         // change the background color
         // 改变被选择的text view的背景颜色
-        if (r == Color.WHITE) {
-            r = Color.GREEN;
-            // selected the tool
+//
+//        ColorDrawable colorDrawableGreen = (ColorDrawable)getResources().getDrawable(R.drawable.green_text_view);
+//        ColorDrawable colorDrawableWhite = (ColorDrawable)getResources().getDrawable(R.drawable.white_text_view);
+//        if (colorDrawableNow == colorDrawableGreen){
+//            colorDrawableNow = colorDrawableWhite;
+//        }
+//        else if (colorDrawableNow == colorDrawableWhite){
+//            colorDrawableNow = colorDrawableGreen;
+//        v.setBackgroundDrawable(colorDrawableNow);
 
-            switch (v.getId()) {
-                case R.id.look_activity_look_text1:
-                    n = 1;
-                case R.id.look_activity_look_text2:
-                    n = 2;
-                case R.id.look_activity_look_text3:
-                    n = 3;
-                case R.id.look_activity_look_text4:
-                    n = 4;
-                case R.id.look_activity_look_text5:
-                    n = 5;
-                case R.id.look_activity_look_text6:
-                    n = 6;
-                case R.id.look_activity_look_text7:
-                    n = 7;
-                case R.id.look_activity_look_text8:
-                    n = 8;
-            }
-            selected.add((page - 1) * 8 + n);
-
-        } else {
-            r = Color.WHITE;
+//        Drawable drawableWhite = getResources().getDrawable(R.drawable.white_text_view);
+//        Drawable drawableGreen = getResources().getDrawable(R.drawable.green_text_view);
+        if (drawable == drawableList.get(1)){
+            drawable = drawableList.get(0);
+            v.setBackground(drawable);
+//            Toast.makeText(this, "init color is same", Toast.LENGTH_SHORT).show();
+        }else if (drawable == drawableList.get(0)){
+            drawable = drawableList.get(1);
+            v.setBackground(drawable);
+//            Toast.makeText(this, "init color is same 2", Toast.LENGTH_SHORT).show();
         }
-        v.setBackgroundColor(r);
+//        if (v.getBackground() == drawable){
+//            Toast.makeText(this, "background equal the drawable", Toast.LENGTH_SHORT).show();
+//        }
+
+
+//        Toast.makeText(this, "click ... ", Toast.LENGTH_SHORT).show();
+
+////        v.setBackground(drawableGreen);
+//        if (v.getBackground() == drawableGreen){
+//            v.setBackground(drawableWhite);
+//            return;
+////            Toast.makeText(this, "green ", Toast.LENGTH_SHORT).show();
+//        }
+//        if (v.getBackground() == drawableWhite){
+//            v.setBackground(drawableGreen);
+//            return;
+////            Toast.makeText(this, "white ", Toast.LENGTH_SHORT).show();
+//        }
+//        if (v.getBackground() != drawableGreen && v.getBackground() != drawableWhite){
+//            v.setBackground(drawableWhite);
+//            return;
+//        }
+
+//        if ((ColorDrawable)v.getBackground() == colorDrawableWhite){
+//            v.setBackgroundDrawable(colorDrawableGreen);
+//            return;
+//        }
+//        if ((ColorDrawable)v.getBackground() == colorDrawableGreen){
+//            v.setBackgroundDrawable(colorDrawableWhite);
+//            return;
+//        }
+//        if ((ColorDrawable)v.getBackground() != colorDrawableWhite){
+//            v.setBackgroundDrawable(colorDrawableWhite);
+//            return;
+//        }
+
+
+//        if (r == Color.WHITE) {
+//            r = Color.GREEN;
+//            // selected the tool
+//
+//            switch (v.getId()) {
+//                case R.id.look_activity_look_text1:
+//                    n = 1;
+//                case R.id.look_activity_look_text2:
+//                    n = 2;
+//                case R.id.look_activity_look_text3:
+//                    n = 3;
+//                case R.id.look_activity_look_text4:
+//                    n = 4;
+//                case R.id.look_activity_look_text5:
+//                    n = 5;
+//                case R.id.look_activity_look_text6:
+//                    n = 6;
+//                case R.id.look_activity_look_text7:
+//                    n = 7;
+//                case R.id.look_activity_look_text8:
+//                    n = 8;
+//            }
+////            selected.add((page - 1) * 8 + n);
+//
+//        } else if (r == Color.GREEN){
+//            // cancer the select
+//            // 由绿色变为白色，意味着取消这个工具的选择
+////            int index = selected.indexOf((page - 1) * 8 + n);
+////            selected.remove(index);
+////            for (int i = selected.size()-1; i >=0 ; i--) {
+////                if ("b".equals(selected.get(i))) {
+////                    selected.remove(i);
+////                }
+////            }
+//            r = Color.WHITE;
+//        }
+//        v.setBackgroundColor(r);
+
+        // save the selected tools
+        // 保存选中的工具
+//        int color = 0;
+//        for (int i = 0 ;i < lookTextList.size();i++){
+//            ColorDrawable cd = (ColorDrawable)lookTextList.get(i).getBackground();
+//            color = cd.getColor();
+//        }
+//
+//        Toast.makeText(this, "color : " + color, Toast.LENGTH_SHORT).show();
+
+        // every times click item , update the select list
+        // 每次点击都更新选择工具的容器
+        for (int i = 0;i < lookTextList.size();i++) {
+            if (lookTextList.get(i).getBackground()
+                    == drawableList.get(1)){
+//                AllDataControl.selected_tools.add(i);
+                // 1 : selected
+                // 1 : green
+                AllDataControl.selectedToolsMap.put(i,1);
+            }else {
+                AllDataControl.selectedToolsMap.put(i,0);
+            }
+        }
+//        String showSelected = " selected : " ;
+        for (int i = 0 ;i < AllDataControl.selectedToolsMap.size();i++){
+//            showSelected += AllDataControl.selectedToolsMap.get(i);
+            // it's represent it has been selected
+            // 1 : selected
+            if (AllDataControl.selectedToolsMap.get(i) == 1){
+//                AllDataControl.selected_tools.add(i + (page - 1) * 8);
+                // for test
+                AllDataControl.selected_tools.add(i);
+            }
+        }
+        Toast.makeText(this, "selected tool amount : " + AllDataControl.selected_tools.size()
+                , Toast.LENGTH_SHORT).show();
+
+//        Toast.makeText(this, " " + showSelected, Toast.LENGTH_SHORT).show();
 
 
     }
@@ -416,4 +582,15 @@ public class LookActivity extends Activity implements View.OnClickListener {
     2017.4.2
     * implement the borrow function
     * 实现借用功能
+
+    2017.4.15
+    * how to delete an element of array list
+    * array list 中然后删除一共元素
+
+    2017.4.16
+    * use the hash map replace the array list
+    * 用hash map代替array list 实现点击选择工具
+    * next step deal with the data transfer between
+    * look activity and confirm select activity
+    * 下一步解决数据共享的问题，在两个activity之间
  */

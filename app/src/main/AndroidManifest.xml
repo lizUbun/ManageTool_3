@@ -5,26 +5,46 @@
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LookActivity" />
-        <activity android:name=".DatabaseView" />
+        <activity
+            android:name=".LookActivity"
+            android:label="@string/title_activity_look" />
+        <activity
+            android:name=".DatabaseView"
+            android:label="@string/title_activity_database_view" />
         <activity
             android:name=".EditView"
             android:label="@string/title_activity_edit_view" />
-        <activity android:name=".BorrowListAcivity" />
-        <activity android:name=".ConfirmBack" />
-        <activity android:name=".ConfirmSelect"></activity>
+        <activity
+            android:name=".BorrowListAcivity"
+            android:label="@string/title_activity_borrow_list" />
+        <activity
+            android:name=".ConfirmBack"
+            android:label="@string/title_activity_confirm_back" />
+        <activity
+            android:name=".ConfirmSelect"
+            android:label="@string/title_activity_confirm_select" />
+
+        <service
+            android:name=".AllDataControl"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.xlc.manage_tool.ALL_DATA_CONTROL"></action>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

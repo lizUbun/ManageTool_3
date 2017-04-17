@@ -10,6 +10,7 @@ import android.util.Log;
 import com.xlc.tool.ManageTool;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AllDataControl extends Service {
     Handler handler;
@@ -26,6 +27,7 @@ public class AllDataControl extends Service {
     // look list activity selected items
     // 在挑选工具中被选中的工具
     public static ArrayList<Integer> selected_tools;
+    public static HashMap<Integer,Integer> selectedToolsMap;
 
     public AllDataControl() {
 
