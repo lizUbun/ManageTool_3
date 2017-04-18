@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -110,19 +111,65 @@ public class ConfirmSelect extends Activity {
 
 //        textViewsGroup.get(1).setText("selected : " +
 //        AllDataControl.selected_tools);
-        int j = 0;
-        for (int i = 0 ;i < AllDataControl.selectedToolsMap.size();i++){
+//        int j = 0;
+//        for (int i = 0 ;i < AllDataControl.selectedToolsMap.size();i++){
+//            if (AllDataControl.selectedToolsMap.get(i) == 1){
+//                textViewsGroup.get(j).setText("tools id : " + (i + 1));
+//                j++;
+//            }
+//        }
+//        for (long i = 1 ; i < 6;i++) {
+//            Tools tool = (Tools) DataSupport.find(Tools.class, i);
+//            String displayTool1 = ToolsToStringFormat(tool);
+//            textViewsGroup.get((int)i).setText(displayTool1);
+//        }
+//        textViewsGroup.get(0).setText("selected tools : " + AllDataControl.selectedTools.size());
+        String selectedToolId = " ";
+//        for (int i = 0 ;i < AllDataControl.selectedTools.size();i++){
+//            selectedToolId = selectedToolId + ", " + AllDataControl.selectedTools.get(i);
+//        }
+        // plan 2
+//        for (int i = 0;i < AllDataControl.selectedPageTools.size();i++){
+//            for (int j = 0 ; j < AllDataControl.selectedPageTools.get(i).size();j++){
+//                selectedToolId = selectedToolId
+//                        + AllDataControl.selectedPageTools.get(i).get(j)
+//                        + " , ";
+//            }
+//        }
+        // check one page
+//        for (int i = 0;i < AllDataControl.onePageTools.size();i++){
+//            selectedToolId = selectedToolId
+//                    + AllDataControl.onePageTools.get(i) + " ,";
+//        }
 
-            if (AllDataControl.selectedToolsMap.get(i) == 1){
-                textViewsGroup.get(j).setText("tools id : " + (i + 1));
-                j++;
-            }
-        }
+
+//        textViewsGroup.get(2).setText("size : " + AllDataControl.onePageTools.size());
+
 //        textViewsGroup.get(7).setText("all data : "
 //                + AllDataControl.selectedToolsMap.size());
+        for (int i = 0;i < AllDataControl.selectedToolsMap.size();i++){
+            if (AllDataControl.selectedToolsMap.get(i) == 1){
+                selectedToolId = selectedToolId + i + " ,";
+            }
+        }
+
+        textViewsGroup.get(1).setText("ids : " + selectedToolId);
 
 
+//        Set<Integer> key = AllDataControl.pageSelectedToolsMap.keySet();
+//        Integer[] keyArray = (Integer[]) key.toArray();
+//        textViewsGroup.get(2).setText(" 1 : " + AllDataControl.pageSelectedToolsMap.get(keyArray[0]));
+    }
 
+    // tools format conversion
+    // 工具格式转换，从对象到文字
+    public static String ToolsToStringFormat(Tools tool) {
+        String str = " ";
+        if (tool !=  null){
+            str = "工具名：" + tool.getName() + " 工具数量 ： "
+                    + tool.getAmount();
+        }
+        return str;
     }
 
     @OnClick({R.id.confirm_select_activity_selected_tool_last_page, R.id.confirm_select_activity_selected_tools_next_page, R.id.confirm_select_activity_selected_givie_ok, R.id.confirm_select_activity_selected_give_cancel})

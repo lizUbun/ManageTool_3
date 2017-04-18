@@ -97,16 +97,14 @@ public class LookActivity extends Activity implements View.OnClickListener {
         drawable = drawableList.get(0);
         drawableWhite = drawableList.get(1);
         drawableGreen = drawableList.get(1);
-
-        initText();
-        // show the init data
-        // 显示所有工具的第一页
-        initGraphic();
-
         // 1.get all the tool info from the database
         allTools = (ArrayList<Tools>) DataSupport.findAll(Tools.class);
         // 2. get the amount of list
         total = allTools.size();
+        initText();
+        // show the init data
+        // 显示所有工具的第一页
+        initGraphic();
 
         // start the data control service
         startService(new Intent(this,AllDataControl.class));
@@ -175,8 +173,9 @@ public class LookActivity extends Activity implements View.OnClickListener {
                     page = max;
                 }
                 pageNumber.setText(page + " / " + max);
-//                // save the selected tools
-//                // 保存选中的工具
+                // save the selected tools
+                // 保存选中的工具
+                AllDataControl.pageSelectedToolsMap.put(page,AllDataControl.selectedToolsMap);
 //                for (int i = 0 ;i < lookTextList.size();i++){
 //                    ColorDrawable cd = (ColorDrawable)lookTextList.get(i).getBackground();
 //                    if (cd.getColor() == 0x0f0){
@@ -258,11 +257,11 @@ public class LookActivity extends Activity implements View.OnClickListener {
 //                } else {
 //                    Toast.makeText(LookActivity.this, "请先选择工具", Toast.LENGTH_SHORT).show();
 //                }
-                if (AllDataControl.selected_tools.size() != 0){
+//                if (AllDataControl.selected_tools.size() != 0){
 //                    AllDataControl.selected_tools = selected;
                     Intent intent = new Intent(LookActivity.this, ConfirmSelect.class);
                     startActivity(intent);
-                }
+//                }
 
 
             }
@@ -322,8 +321,13 @@ public class LookActivity extends Activity implements View.OnClickListener {
         }
 
         // init the selected tools list
-        AllDataControl.selected_tools = new ArrayList<>();
+//        AllDataControl.selected_tools = new ArrayList<>();
         AllDataControl.selectedToolsMap = new HashMap<>();
+//        AllDataControl.selectedTools = new HashMap<>();
+//        AllDataControl.selectedToolsNumber = 0;
+//        AllDataControl.selectedPageTools = new HashMap<>();
+//        AllDataControl.onePageTools = new ArrayList<>();
+        AllDataControl.pageSelectedToolsMap = new HashMap<>();
 
     }
 
@@ -372,6 +376,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         lookTextList.add(lookText6);
         lookTextList.add(lookText7);
         lookTextList.add(lookText8);
+        pageNumber.setText("1 / " + total / 8);
 
         // button
         nextPage = (Button) findViewById(R.id.look_activity_look_next_page);
@@ -530,21 +535,39 @@ public class LookActivity extends Activity implements View.OnClickListener {
             }
         }
 //        String showSelected = " selected : " ;
-        for (int i = 0 ;i < AllDataControl.selectedToolsMap.size();i++){
+//        for (int i = 0 ;i < AllDataControl.selectedToolsMap.size();i++){
 //            showSelected += AllDataControl.selectedToolsMap.get(i);
             // it's represent it has been selected
             // 1 : selected
-            if (AllDataControl.selectedToolsMap.get(i) == 1){
+//            if (AllDataControl.selectedToolsMap.get(i) == 1){
 //                AllDataControl.selected_tools.add(i + (page - 1) * 8);
                 // for test
-                AllDataControl.selected_tools.add(i);
-            }
-        }
-        Toast.makeText(this, "selected tool amount : " + AllDataControl.selected_tools.size()
-                , Toast.LENGTH_SHORT).show();
+//                AllDataControl.selected_tools.add(i);
+//
+//            }
+//        }
+//        Toast.makeText(this, "selected tool amount : " + AllDataControl.selected_tools.size()
+//                , Toast.LENGTH_SHORT).show();
 
 //        Toast.makeText(this, " " + showSelected, Toast.LENGTH_SHORT).show();
 
+        // as a result of duplication , use the hash map store tools id
+        for (int i = 0 ;i < AllDataControl.selectedToolsMap.size();i ++){
+            // if the text view has been selected
+            // 1 代表被选中
+            if (AllDataControl.selectedToolsMap.get(i) == 1) {
+//                AllDataControl.selectedTools.put(AllDataControl.selectedToolsNumber, i + page * 8 + 1);
+
+                // plan 2
+//                AllDataControl.onePageTools.add(AllDataControl.selectedToolsNumber,i + 1);
+//                AllDataControl.selectedToolsNumber ++;
+            }
+
+
+        }
+//        AllDataControl.selectedPageTools.put(page,AllDataControl.onePageTools);
+//        AllDataControl.selectedToolsNumber = 0;
+//        Toast.makeText(this, "page : " + page, Toast.LENGTH_SHORT).show();
 
     }
 

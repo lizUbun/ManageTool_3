@@ -26,8 +26,19 @@ public class AllDataControl extends Service {
 
     // look list activity selected items
     // 在挑选工具中被选中的工具
-    public static ArrayList<Integer> selected_tools;
+//    public static ArrayList<Integer> selected_tools;
+    // argument 1 ： id 序号，相当于每一页的1到8个显示
+    // argument 2 ： 1 选中，相当于选中或者没有选中的标志
     public static HashMap<Integer,Integer> selectedToolsMap;
+    // selected items of tools no duplicate
+//    public static HashMap<Integer,Integer> selectedTools;
+//    public static int selectedToolsNumber;
+    // another plan : use the page as the key
+//    public static HashMap<Integer,ArrayList<Integer>> selectedPageTools;
+//    public static ArrayList<Integer> onePageTools;
+    // plan 3
+    // save page and one page selected hash map
+    public static HashMap<Integer,HashMap<Integer,Integer>> pageSelectedToolsMap;
 
     public AllDataControl() {
 
