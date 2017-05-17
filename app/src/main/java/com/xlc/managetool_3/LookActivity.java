@@ -1,33 +1,27 @@
 package com.xlc.managetool_3;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.xlc.tool.ManageTool;
 
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LookActivity extends Activity implements View.OnClickListener {
     int r = Color.WHITE;
@@ -76,11 +70,14 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     // all data control service
     AllDataControl allDataControl;
+    @BindView(R.id.add_car)
+    Button addCar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_look);
+        ButterKnife.bind(this);
 
         // init the database
         SQLiteDatabase db = LitePal.getDatabase();
@@ -107,7 +104,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         initGraphic();
 
         // start the data control service
-        startService(new Intent(this,AllDataControl.class));
+        startService(new Intent(this, AllDataControl.class));
 
         /*
             turn to the view of database
@@ -175,7 +172,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
                 pageNumber.setText(page + " / " + max);
                 // save the selected tools
                 // 保存选中的工具
-                AllDataControl.pageSelectedToolsMap.put(page,AllDataControl.selectedToolsMap);
+//                AllDataControl.pageSelectedToolsMap.put(page,AllDataControl.selectedToolsMap);
 //                for (int i = 0 ;i < lookTextList.size();i++){
 //                    ColorDrawable cd = (ColorDrawable)lookTextList.get(i).getBackground();
 //                    if (cd.getColor() == 0x0f0){
@@ -242,8 +239,8 @@ public class LookActivity extends Activity implements View.OnClickListener {
                 // clear the empty element
                 // 将选择的数组中空的数据去除
                 ArrayList<Integer> selectNoEmpty = new ArrayList<Integer>();
-                for (int i = 0 ; i < selected.size();i++){
-                    if (selected.get(i) != 0){
+                for (int i = 0; i < selected.size(); i++) {
+                    if (selected.get(i) != 0) {
                         selectNoEmpty.add(selected.get(i));
                     }
                 }
@@ -259,8 +256,8 @@ public class LookActivity extends Activity implements View.OnClickListener {
 //                }
 //                if (AllDataControl.selected_tools.size() != 0){
 //                    AllDataControl.selected_tools = selected;
-                    Intent intent = new Intent(LookActivity.this, ConfirmSelect.class);
-                    startActivity(intent);
+                Intent intent = new Intent(LookActivity.this, ConfirmSelect.class);
+                startActivity(intent);
 //                }
 
 
@@ -296,24 +293,24 @@ public class LookActivity extends Activity implements View.OnClickListener {
 //        message.what = AllDataControl.DATA_STATE_INIT;
 //        handler = new Handler();
 //        handler.sendMessage(message);
-        if (AllDataControl.display != null){
-            if (AllDataControl.display.size() >= 8){
-                for (int i = 0 ;i < 8;i++){
+        if (AllDataControl.display != null) {
+            if (AllDataControl.display.size() >= 8) {
+                for (int i = 0; i < 8; i++) {
                     lookTextList.get(i).setText(AllDataControl.display.get(i));
                 }
             }
-            if(AllDataControl.display.size() < 8){
-                for (int i=0;i < AllDataControl.display.size();i++){
+            if (AllDataControl.display.size() < 8) {
+                for (int i = 0; i < AllDataControl.display.size(); i++) {
                     lookTextList.get(i).setText(AllDataControl.display.get(i));
                 }
             }
         }
-        if (AllDataControl.display == null){
-            ArrayList<Tools> tools = (ArrayList)DataSupport.findAll(Tools.class);
+        if (AllDataControl.display == null) {
+            ArrayList<Tools> tools = (ArrayList) DataSupport.findAll(Tools.class);
             ArrayList<String> content = new ArrayList<>();
-            for (int i = 0;i < tools.size();i++){
+            for (int i = 0; i < tools.size(); i++) {
                 content.add(tools.get(i).getName() + "  数量 ： " + tools.get(i).getAmount());
-                if (i < 8){
+                if (i < 8) {
                     lookTextList.get(i).setText(content.get(i));
                 }
             }
@@ -427,11 +424,11 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
 //        Drawable drawableWhite = getResources().getDrawable(R.drawable.white_text_view);
 //        Drawable drawableGreen = getResources().getDrawable(R.drawable.green_text_view);
-        if (drawable == drawableList.get(1)){
+        if (drawable == drawableList.get(1)) {
             drawable = drawableList.get(0);
             v.setBackground(drawable);
 //            Toast.makeText(this, "init color is same", Toast.LENGTH_SHORT).show();
-        }else if (drawable == drawableList.get(0)){
+        } else if (drawable == drawableList.get(0)) {
             drawable = drawableList.get(1);
             v.setBackground(drawable);
 //            Toast.makeText(this, "init color is same 2", Toast.LENGTH_SHORT).show();
@@ -523,25 +520,25 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
         // every times click item , update the select list
         // 每次点击都更新选择工具的容器
-        for (int i = 0;i < lookTextList.size();i++) {
+        for (int i = 0; i < lookTextList.size(); i++) {
             if (lookTextList.get(i).getBackground()
-                    == drawableList.get(1)){
+                    == drawableList.get(1)) {
 //                AllDataControl.selected_tools.add(i);
                 // 1 : selected
                 // 1 : green
-                AllDataControl.selectedToolsMap.put(i,1);
-            }else {
-                AllDataControl.selectedToolsMap.put(i,0);
+                AllDataControl.selectedToolsMap.put(i, 1);
+            } else {
+                AllDataControl.selectedToolsMap.put(i, 0);
             }
         }
 //        String showSelected = " selected : " ;
 //        for (int i = 0 ;i < AllDataControl.selectedToolsMap.size();i++){
 //            showSelected += AllDataControl.selectedToolsMap.get(i);
-            // it's represent it has been selected
-            // 1 : selected
+        // it's represent it has been selected
+        // 1 : selected
 //            if (AllDataControl.selectedToolsMap.get(i) == 1){
 //                AllDataControl.selected_tools.add(i + (page - 1) * 8);
-                // for test
+        // for test
 //                AllDataControl.selected_tools.add(i);
 //
 //            }
@@ -552,7 +549,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
 //        Toast.makeText(this, " " + showSelected, Toast.LENGTH_SHORT).show();
 
         // as a result of duplication , use the hash map store tools id
-        for (int i = 0 ;i < AllDataControl.selectedToolsMap.size();i ++){
+        for (int i = 0; i < AllDataControl.selectedToolsMap.size(); i++) {
             // if the text view has been selected
             // 1 代表被选中
             if (AllDataControl.selectedToolsMap.get(i) == 1) {
@@ -571,9 +568,18 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     }
 
+    /*
+            when make sure that select tool over in this page
+            当完成了当前页的工具选择
+     */
+    @OnClick(R.id.add_car)
+    public void onViewClicked() {
+
+    }
+
     // new thread deal the data
     // 再新的线程里处理数据操作
-    class DataThread implements Runnable{
+    class DataThread implements Runnable {
         @Override
         public void run() {
 //            Looper.prepare();
