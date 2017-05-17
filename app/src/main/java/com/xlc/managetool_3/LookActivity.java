@@ -574,6 +574,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
      */
     @OnClick(R.id.add_car)
     public void onViewClicked() {
+        //
 
     }
 

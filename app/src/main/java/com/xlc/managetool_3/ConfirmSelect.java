@@ -147,13 +147,13 @@ public class ConfirmSelect extends Activity {
 
 //        textViewsGroup.get(7).setText("all data : "
 //                + AllDataControl.selectedToolsMap.size());
-        for (int i = 0;i < AllDataControl.selectedToolsMap.size();i++){
-            if (AllDataControl.selectedToolsMap.get(i) == 1){
-                selectedToolId = selectedToolId + i + " ,";
-            }
-        }
+//        for (int i = 0;i < AllDataControl.selectedToolsMap.size();i++){
+//            if (AllDataControl.selectedToolsMap.get(i) == 1){
+//                selectedToolId = selectedToolId + i + " ,";
+//            }
+//        }
 
-        textViewsGroup.get(1).setText("ids : " + selectedToolId);
+//        textViewsGroup.get(1).setText("ids : " + selectedToolId);
 
 
 //        Set<Integer> key = AllDataControl.pageSelectedToolsMap.keySet();
