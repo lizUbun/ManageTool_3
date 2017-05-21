@@ -79,4 +79,13 @@
         android:text="清 空"
         app:layout_constraintLeft_toRightOf="@+id/main_activity_sure"
         app:layout_constraintTop_toBottomOf="@+id/main_activity_pass_word" />
+
+    <TextView
+        android:id="@+id/debug_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_activity_sure" />
 </android.support.constraint.ConstraintLayout>

@@ -101,7 +101,7 @@
 
     <TextView
         android:id="@+id/look_activity_look_text1"
-        android:layout_width="344dp"
+        android:layout_width="@dimen/display_tool_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
@@ -113,7 +113,7 @@
 
     <TextView
         android:id="@+id/look_activity_look_text2"
-        android:layout_width="344dp"
+        android:layout_width="@dimen/display_tool_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -124,7 +124,7 @@
 
     <TextView
         android:id="@+id/look_activity_look_text3"
-        android:layout_width="344dp"
+        android:layout_width="@dimen/display_tool_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -135,7 +135,7 @@
 
     <TextView
         android:id="@+id/look_activity_look_text4"
-        android:layout_width="344dp"
+        android:layout_width="@dimen/display_tool_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -146,7 +146,7 @@
 
     <TextView
         android:id="@+id/look_activity_look_text5"
-        android:layout_width="344dp"
+        android:layout_width="@dimen/display_tool_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -157,7 +157,7 @@
 
     <TextView
         android:id="@+id/look_activity_look_text6"
-        android:layout_width="344dp"
+        android:layout_width="@dimen/display_tool_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -168,7 +168,7 @@
 
     <TextView
         android:id="@+id/look_activity_look_text7"
-        android:layout_width="344dp"
+        android:layout_width="@dimen/display_tool_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -179,7 +179,7 @@
 
     <TextView
         android:id="@+id/look_activity_look_text8"
-        android:layout_width="344dp"
+        android:layout_width="@dimen/display_tool_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -207,5 +207,37 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/look_activity_look_text8" />
+
+    <TextView
+        android:id="@+id/tool_car_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="工具数量："
+        app:layout_constraintLeft_toRightOf="@+id/add_car"
+        app:layout_constraintTop_toBottomOf="@+id/look_activity_look_text8" />
+
+    <TextView
+        android:id="@+id/tool_car_amount_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintLeft_toRightOf="@+id/add_car"
+        app:layout_constraintTop_toBottomOf="@+id/tool_car_amount" />
+
+    <ImageView
+        android:id="@+id/tool_pic_view"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+
+        android:scaleType="centerInside"
+        android:src="@drawable/t1"
+        app:layout_constraintLeft_toRightOf="@+id/look_activity_look_text1"
+        android:layout_marginLeft="9dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
 
 </android.support.constraint.ConstraintLayout>
