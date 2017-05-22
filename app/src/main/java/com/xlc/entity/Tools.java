@@ -1,4 +1,4 @@
-package com.xlc.managetool_3;
+package com.xlc.entity;
 
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
@@ -19,6 +19,37 @@ public class Tools extends DataSupport {
     private String size;
     private String picture;
     private String remark;
+    private Integer id;
+
+    public int getId_second() {
+        return id_second;
+    }
+
+    public void setId_second(int id_second) {
+        this.id_second = id_second;
+    }
+
+    private int id_second;
+
+    public String getCorrectSize() {
+        return correctSize;
+    }
+
+    public void setCorrectSize(String correctSize) {
+        this.correctSize = correctSize;
+    }
+
+    private String correctSize;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+
 
     public void setAmount(Integer amount) {
         this.amount = amount;

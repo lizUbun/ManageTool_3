@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xlc.entity.Tools;
+
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
@@ -65,6 +67,7 @@ public class MainActivity extends Activity {
 
         /*
             clear the input
+            重新输入
          */
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,76 +77,62 @@ public class MainActivity extends Activity {
             }
         });
 
-        // add the data into tools
-//        for (int i = 0 ; i < 30 ;i++) {
-//            Tools tools2 = new Tools();
-//            tools2.setName(" " + System.currentTimeMillis());
-//            tools2.setAmount(1);
-//            tools2.saveThrows();
-//
-//            User user = new User();
-//            user.setName("user" + i + System.currentTimeMillis());
-//            user.setPass_word("password");
-//            user.saveThrows();
-//        }
-
-        //
-//    int i = DataSupport.findAll(Tools.class).size();
-//        Toast.makeText(this, "tools has  " + i, Toast.LENGTH_SHORT).show();
-//    int j = DataSupport.findAll(User.class).size();
-//        Toast.makeText(this, "user has " + j, Toast.LENGTH_SHORT).show();
-
         // clear the data
-//        DataSupport.deleteAll(Tools.class);
+        // 清除以前的数据
+        DataSupport.deleteAll(Tools.class);
 
         // load the tool list
         loadToolList();
     }
 
     // load the data in the file tool list
+    //  加载工具清单中的工具
     private void loadToolList() {
         try {
             InputStream in = getAssets().open("tool_list.txt");
-            String s = "";
             InputStreamReader reader = new InputStreamReader(in);
             BufferedReader bufferedReader = new BufferedReader(reader);
-            StringBuffer buffer = new StringBuffer("");
+//            StringBuffer buffer = new StringBuffer("");
             String str;
             while ((str = bufferedReader.readLine()) != null) {
                 lineToData(str);
-//                buffer.append(str);
-//                buffer.append("\n");
+//                buffer.append(s + " ");
             }
-//            s = buffer.toString();
-//            debugText.setText(s);
+
+            debugText.setTextSize(28);
+//            debugText.setText(buffer);
 
             int size = DataSupport.findAll(Tools.class).size();
-            debugText.setText(" 工具数量：" + size);
+//            debugText.setText(" 工具数量：" + size);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     // read line by line to deal
-    private void lineToData(String str) {
+    // 读取每一行数据，并且加载到数据库
+    private String  lineToData(String str) {
         String[] s = str.split("，");
-        StringBuffer sb = new StringBuffer("");
-        for (int i = 0;i < s.length;i++){
-            sb.append(s[i] + "   ");
-        }
+//        StringBuffer sb = new StringBuffer("");
+//        for (int i = 0;i < s.length;i++){
+//            sb.append(s[0] + "   ");
+//        }
         Tools t = new Tools();
+        t.setId_second(Integer.parseInt(s[0]));
         t.setName(s[1]);
         t.setBrand(s[2]);
         t.setType(s[3]);
         t.setMaterial(s[4]);
         t.setStandard(s[5]);
-        t.setPicture(s[6]);
-        t.setRemark(s[7]);
+        t.setSize(s[6]);
+        t.setPicture(s[7]);
+        t.setRemark(s[8]);
         t.save();
 //        debugText.setTextSize(28);
 //        debugText.setText(sb.toString());
+//        debugText.setText(sb);
+        return s[0];
     }
-
 
     private void check(String input_name, String input_password) {
         // 1 get all user info
@@ -160,7 +149,6 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(),
                     "请输入正确登陆信息",
                     Toast.LENGTH_SHORT).show();
-
         }
 
         // 3 record this login
@@ -170,7 +158,6 @@ public class MainActivity extends Activity {
         user.saveThrows();
     }
 }
-
 
 /*
         2017.3.26

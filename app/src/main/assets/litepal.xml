@@ -2,10 +2,10 @@
 <litepal>
     <dbname value="demo" ></dbname>
 
-    <version value="11" ></version>
+    <version value="14" ></version>
 
     <list>
-        <mapping class="com.xlc.managetool_3.Tools"/>
+        <mapping class="com.xlc.entity.Tools"/>
         <mapping class="com.xlc.managetool_3.User"></mapping>
         <mapping class="com.xlc.managetool_3.BorrowProof"></mapping>
     </list>

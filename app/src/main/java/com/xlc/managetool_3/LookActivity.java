@@ -3,14 +3,11 @@ package com.xlc.managetool_3;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,6 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.xlc.entity.SelectedToolCar;
+import com.xlc.entity.Tools;
 
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
@@ -67,16 +67,12 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // the record of data
     int total = 0;
     // all the tools record
+    // 所有工具
     ArrayList<Tools> allTools;
     // the selected tool
+    // 被选中的工具
     ArrayList<Integer> selected;
-    // the number of selected in one page
-    int n;
-    // handler mechanism
-//    Handler handler;
 
-    // all data control service
-    AllDataControl allDataControl;
     // add the selected tools into the car
     // 添加被选中的工具到工具清单
     @BindView(R.id.add_car)
@@ -96,15 +92,17 @@ public class LookActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_look);
         ButterKnife.bind(this);
         // init the var
+        // 初始化相关变量
         initActivity();
         // init the text view
+        // 初始化容器
         initText();
         // show the init data
         // 显示所有工具的第一页
         initGraphic();
-
         /*
             turn to the view of database
+            跳转到显示和操作数据库的活动
          */
         showDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +120,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
             }
         });
 
-
         // next page
         // 翻页
         nextPage.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +136,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         });
 
         // borrow button listener
+        // 跳转到借用清单活动
         borrowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +149,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         select_over.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selecteOverListener();
+                selectOverListener();
             }
         });
 
@@ -174,12 +172,13 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     }
 
+    // touch and show animation
     private void toolPicViewListener() {
         Animation animation = AnimationUtils.loadAnimation(getApplication(), R.anim.tool_pic_dis);
         toolPicView.startAnimation(animation);
     }
 
-    private void selecteOverListener() {
+    private void selectOverListener() {
         // clear the empty element
         // 将选择的数组中空的数据去除
         ArrayList<Integer> selectNoEmpty = new ArrayList<Integer>();
@@ -191,7 +190,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
         selected = selectNoEmpty;
         Intent intent = new Intent(LookActivity.this, ConfirmSelect.class);
         startActivity(intent);
-
     }
 
     private void borrowButtonListener() {
@@ -201,10 +199,13 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     private void lastPageListener() {
         page--;
-        if (page < 1) {
-            page = 1;
-        }
         int max = total / 8;
+        // if the total < 8 than the page = 1
+        // 如果工具数量小于8，则只有一页
+        if (total <= 8){
+            page = 1;
+            max = 1;
+        }
         pageNumber.setText(page + " / " + max);
 
         // show the data according to the page
@@ -212,6 +213,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         showDataAccordPage(lookTextList, allTools, page);
 
         // init background color
+        // 初始化工具显示背景的颜色
         initTextViewBackground();
     }
 
@@ -222,6 +224,12 @@ public class LookActivity extends Activity implements View.OnClickListener {
         page++;
         if (page > max) {
             page = max;
+        }
+        // if the total < 8 than the page = 1
+        // 如果工具数量小于8，则只有一页
+        if (total <= 8){
+            page = 1;
+            max = 1;
         }
         pageNumber.setText(page + " / " + max);
 
@@ -235,8 +243,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
     }
 
     private void initActivity() {
-        // init the database
-        SQLiteDatabase db = LitePal.getDatabase();
         showDatabase = (Button) findViewById(R.id.look_activity_show_databse);
         allButton = (Button) findViewById(R.id.look_activity_all_tool);
         colorDrawableNow = (ColorDrawable) getResources().getDrawable(R.drawable.white_text_view);
@@ -250,44 +256,60 @@ public class LookActivity extends Activity implements View.OnClickListener {
         drawable = drawableList.get(0);
         drawableWhite = drawableList.get(1);
         drawableGreen = drawableList.get(1);
+        // init the database
+        SQLiteDatabase db = LitePal.getDatabase();
         // 1.get all the tool info from the database
         allTools = (ArrayList<Tools>) DataSupport.findAll(Tools.class);
+        if (allTools.size() < 8) {
+            AllDataControl.display = (ArrayList) DataSupport.findAll(Tools.class);
+        }else {
+            AllDataControl.display = (ArrayList) DataSupport.findAll(Tools.class).subList(0,8);
+        }
+
         // 2. get the amount of list
         total = allTools.size();
+        // 隐藏软键盘
+        hideKeyboard();
     }
 
     // turn to show all data activity
     // 跳转到显示所有工具的活动
     private void allButtonListener() {
-        // hide the soft keyboard
-        // 隐藏软键盘
-        InputMethodManager imm = (InputMethodManager) getSystemService(
-                getApplicationContext().INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
         // show all the data
         // 显示所有数据
 
         Toast.makeText(LookActivity.this, "total : " + total, Toast.LENGTH_SHORT).show();
-//                // 3. get the page number
-//                if (total / 8 > 1) {
-//                    page = total / 8;
-//                }else {
-//                    page = 1;
-//                }
-        // 4. show the first page
-        if (total > 8) {
-            for (int i = 0; i < 8; i++) {
-                lookTextList.get(i).setText(allTools.get(i).getName());
-            }
-        } else {
-            for (int i = 0; i < total; i++) {
-                lookTextList.get(i).setText(allTools.get(i).getName());
-            }
-        }
+
+//        // 4. show the first page
+//        if (total > 8) {
+//            for (int i = 0; i < 8; i++) {
+//                lookTextList.get(i).setText(allTools.get(i).getName());
+//            }
+//        } else {
+//            for (int i = 0; i < total; i++) {
+//                lookTextList.get(i).setText(allTools.get(i).getName());
+//            }
+//        }
+        // init content
+        initGraphic();
         // 5. page number
         int max = total / 8;
+        // if the total < 8 than the page = 1
+        // 如果工具数量小于8，则只有一页
+        if (total <= 8){
+            page = 1;
+            max = 1;
+        }
         pageNumber.setText(page + " / " + max);
+    }
+
+    private void hideKeyboard() {
+        // hide the soft keyboard
+        // 隐藏软键盘
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                getApplicationContext().INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     // turn to show data base activity
@@ -300,46 +322,11 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // show the data
     // 第一次显示初始化的数据
     private void initGraphic() {
-
-        if (AllDataControl.display != null) {
-            if (AllDataControl.display.size() >= 8) {
-                for (int i = 0; i < 8; i++) {
-                    lookTextList.get(i).setText(AllDataControl.display.get(i));
-                }
-            }
-            if (AllDataControl.display.size() < 8) {
-                for (int i = 0; i < AllDataControl.display.size(); i++) {
-                    lookTextList.get(i).setText(AllDataControl.display.get(i));
-                }
-            }
-        }
-        if (AllDataControl.display == null) {
-            ArrayList<Tools> tools = (ArrayList) DataSupport.findAll(Tools.class);
-            ArrayList<String> content = new ArrayList<>();
-            // set the format of tool's display
-            //  设置工具显示的格式
-            for (int i = 0; i < tools.size(); i++) {
-                Tools t = tools.get(i);
-                content.add(t.getName() + " 品牌 ： " + t.getBrand()
-                + " 型号： " + t.getType()
-                + " 材质：" + t.getMaterial()
-                + " 制式：" + t.getStandard()
-                + " 尺寸：" + t.getSize()
-                + " 备注：" + t.getRemark());
-                if (i < 8) {
-                    lookTextList.get(i).setText(content.get(i));
-                }
-            }
-
-        }
-
-        // init the selected tools list
-        AllDataControl.selectedToolsMap = new HashMap<>();
-        AllDataControl.pageSelectedToolsMap = new HashMap<>();
-
+        displayTools(lookTextList, AllDataControl.display);
     }
 
     // select the tools listener
+    //  选择工具的监听器
     private void addTextViewListener(ArrayList<TextView> lookTextList) {
         for (int i = 0; i < lookTextList.size(); i++) {
             lookTextList.get(i).setOnClickListener(this);
@@ -350,15 +337,18 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // 根据页码显示数据
     private void showDataAccordPage(ArrayList<TextView> lookTextList, ArrayList<Tools> allTools, int page) {
         // 0. add the data 8 times in for loop
-        for (int i = 0; i < 8; i++) {
-            // 1. according to the page select the data
-            // 根据页码选择数据
+        if (page == 1){
+            Toast.makeText(this, "only one page 只有一页", Toast.LENGTH_SHORT).show();
+        }else {
+            for (int i = 0; i < 8; i++) {
+                // 1. according to the page select the data
+                // 根据页码选择数据
             /*
                 page : 1,2,3,4,5,6,
                 index: 0,9,17,25
              */
-            lookTextList.get(i).setText(allTools.get((page - 1) * 8 + i).getName() + " ++++");
-
+                lookTextList.get(i).setText(allTools.get((page - 1) * 8 + i).getName() + " ++++");
+            }
         }
 
     }
@@ -384,8 +374,13 @@ public class LookActivity extends Activity implements View.OnClickListener {
         lookTextList.add(lookText6);
         lookTextList.add(lookText7);
         lookTextList.add(lookText8);
-        pageNumber.setText("1 / " + total / 8);
 
+        pageNumber.setText("1 / " + total / 8);
+        // if the total < 8 than the page = 1
+        // 如果工具数量小于8，则只有一页
+        if (total <= 8){
+            pageNumber.setText("1 / 1" );
+        }
         // button
         nextPage = (Button) findViewById(R.id.look_activity_look_next_page);
         lastPage = (Button) findViewById(R.id.look_activity_look_last_page);
@@ -419,62 +414,100 @@ public class LookActivity extends Activity implements View.OnClickListener {
         if (drawable == drawableList.get(1)) {
             drawable = drawableList.get(0);
             v.setBackground(drawable);
-//            Toast.makeText(this, "init color is same", Toast.LENGTH_SHORT).show();
         } else if (drawable == drawableList.get(0)) {
             drawable = drawableList.get(1);
             v.setBackground(drawable);
-//            Toast.makeText(this, "init color is same 2", Toast.LENGTH_SHORT).show();
         }
-
-        // every times click item , update the select list
-        // 每次点击都更新选择工具的容器
-        for (int i = 0; i < lookTextList.size(); i++) {
-            if (lookTextList.get(i).getBackground()
-                    == drawableList.get(1)) {
-//                AllDataControl.selected_tools.add(i);
-                // 1 : selected
-                // 1 : green
-                AllDataControl.selectedToolsMap.put(i, 1);
-            } else {
-                AllDataControl.selectedToolsMap.put(i, 0);
-            }
-        }
-
-        // as a result of duplication , use the hash map store tools id
-        for (int i = 0; i < AllDataControl.selectedToolsMap.size(); i++) {
-            // if the text view has been selected
-            // 1 代表被选中
-            if (AllDataControl.selectedToolsMap.get(i) == 1) {
-//                AllDataControl.selectedTools.put(AllDataControl.selectedToolsNumber, i + page * 8 + 1);
-
-                // plan 2
-//                AllDataControl.onePageTools.add(AllDataControl.selectedToolsNumber,i + 1);
-//                AllDataControl.selectedToolsNumber ++;
-            }
-
-
-        }
-//        AllDataControl.selectedPageTools.put(page,AllDataControl.onePageTools);
-//        AllDataControl.selectedToolsNumber = 0;
-//        Toast.makeText(this, "page : " + page, Toast.LENGTH_SHORT).show();
-
     }
 
-    /*
-            when make sure that select tool over in this page
-            当完成了当前页的工具选择
-     */
+    // when make sure that select tool over in this page
+    // 当完成了当前页的工具选择
+
     @OnClick(R.id.add_car)
     public void onViewClicked() {
         //  check the amount of selected tools
+        // 检查工具数量
+        int selectedAmount = 0;
+        // whether repeat insert
+        // 是否重复添加
+        boolean repeatInsert = false;
+        for (int i = 0 ;i < lookTextList.size();i++){
+            if (lookTextList.get(i).getBackground() == drawableList.get(1)){
+                // i mean : selected
+                // i 代表被选中的工具
+                //  add the tools into the tool's car
+                // 将工具添加到工具清单
+                // clear the repeat tool
+                // 清除相同的工具
+                if (notInclude(SelectedToolCar.toolListInCar,AllDataControl.display.get(i))) {
+                    SelectedToolCar.toolListInCar.add(AllDataControl.display.get(i));
+                    selectedAmount ++;
+                }else {
+                    repeatInsert = true;
+//                    Toast.makeText(this, "你试图重复添加工具，被拒绝", Toast.LENGTH_SHORT).show();
+                }
 
+            }
+        }
+        // tell the user that you had add tools
+        // 提示用户新选择了几个工具
+        if (repeatInsert){
+            Toast.makeText(this, "你试图重复添加工具，被拒绝;但是不重复的工具将成功添加", Toast.LENGTH_SHORT).show();
+        }else {
+            if (selectedAmount != 0) {
+                Toast.makeText(this, "你添加了" + selectedAmount + "工具到借用清单", Toast.LENGTH_SHORT).show();
+            }
+        }
+        repeatInsert = false;
         //  clear the background of tools
+        //  确认选择后清空背景
+        initTextViewBackground();
 
-        //  add the tools into the tool's car
+        // display the total of the selected tool
+        // 显示被选中的工具总数
+        toolCarAmountDisplay.setText(" " + SelectedToolCar.toolListInCar.size());
+    }
 
+    // whether the one list is include the second
+    // 判断第一个数组是否包含第二个元素
+    public static boolean notInclude(ArrayList<Tools> toolListInCar, Tools tools) {
+        for (int i = 0 ;i < toolListInCar.size();i++){
+            if (toolListInCar.get(i) == tools){
+                return false;
+            }
+        }
+        return true;
     }
 
 
+    // display the tools in the text view list
+    // 在八个text显示栏中显示工具信息
+    public static void displayTools(ArrayList<TextView> lookTextList,ArrayList<Tools> tools){
+        // set the format of tool's display
+        //  设置工具显示的格式
+        ArrayList<String> content = new ArrayList<>();
+        for (int i = 0; i < tools.size(); i++) {
+            Tools t = tools.get(i);
+            content.add("ID: " + t.getId_second()
+                    + " " + t.getName()
+                    + " 品牌 ： " + t.getBrand()
+                    + " 型号： " + t.getType()
+                    + " 材质：" + t.getMaterial()
+                    + " 制式：" + t.getStandard()
+                    + " 尺寸：" + t.getSize()
+                    + " 备注：" + t.getRemark());
+            if (i < 8) {
+                lookTextList.get(i).setText(content.get(i));
+            }
+        }
+        // if there no content then display nothing
+        // 如果没有内容则不显示
+        for (int i = 0 ;i < lookTextList.size();i++){
+            if (i >= content.size()){
+                lookTextList.get(i).setText("");
+            }
+        }
+    }
 }
 
 

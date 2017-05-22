@@ -149,7 +149,7 @@
         android:layout_marginStart="8dp" />
 
     <Button
-        android:id="@+id/confirm_select_activity_selected_givie_ok"
+        android:id="@+id/confirm_select_activity_selected_give_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -214,7 +214,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="8dp"
         android:text="取消"
-        app:layout_constraintLeft_toRightOf="@+id/confirm_select_activity_selected_givie_ok"
+        app:layout_constraintLeft_toRightOf="@+id/confirm_select_activity_selected_give_ok"
         app:layout_constraintTop_toBottomOf="@+id/confirm_select_activity_selected_give_time"
         android:layout_marginStart="12dp" />
 
