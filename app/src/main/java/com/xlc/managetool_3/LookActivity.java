@@ -193,7 +193,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
     }
 
     private void borrowButtonListener() {
-        Intent intent = new Intent(LookActivity.this, BorrowListAcivity.class);
+        Intent intent = new Intent(LookActivity.this, BorrowListActivity.class);
         startActivity(intent);
     }
 

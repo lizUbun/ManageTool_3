@@ -28,7 +28,7 @@
             android:name=".EditView"
             android:label="@string/title_activity_edit_view" />
         <activity
-            android:name=".BorrowListAcivity"
+            android:name=".BorrowListActivity"
             android:label="@string/title_activity_borrow_list" />
         <activity
             android:name=".ConfirmBack"
@@ -37,14 +37,6 @@
             android:name=".ConfirmSelect"
             android:label="@string/title_activity_confirm_select" />
 
-        <service
-            android:name=".AllDataControl"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.xlc.manage_tool.ALL_DATA_CONTROL"></action>
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

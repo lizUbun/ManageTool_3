@@ -3,10 +3,12 @@ package com.xlc.managetool_3;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.CarrierConfigManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xlc.entity.SelectedToolCar;
 import com.xlc.entity.Tools;
@@ -79,6 +81,8 @@ public class ConfirmSelect extends Activity {
         textViewsGroup.add(confirmSelectActivitySelectedToolsList7);
         textViewsGroup.add(confirmSelectActivitySelectedToolsList8);
 
+        // display the selected tools
+        // 显示被选中的工具
         LookActivity.displayTools(textViewsGroup, SelectedToolCar.toolListInCar);
     }
 
@@ -106,7 +110,9 @@ public class ConfirmSelect extends Activity {
         borrowProof.setGiver(confirmSelectActivityGiveToolsManName.getText().toString());
         borrowProof.setBorrowTime(confirmSelectActivitySelectedGiveTime.getText().toString());
         borrowProof.saveThrows();
-        Intent intent = new Intent(ConfirmSelect.this, BorrowListAcivity.class);
+        // debug
+//        Toast.makeText(this, "borrow : " + id, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(ConfirmSelect.this,BorrowListActivity.class);
         startActivity(intent);
     }
 
