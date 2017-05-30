@@ -59,6 +59,16 @@ public class BorrowProof extends DataSupport {
     String giveBacker;
     String giveBackReceiver;
 
+    public String getBorrowState() {
+        return borrowState;
+    }
+
+    public void setBorrowState(String borrowState) {
+        this.borrowState = borrowState;
+    }
+
+    String borrowState;
+
     public Integer getAmount() {
         return amount;
     }

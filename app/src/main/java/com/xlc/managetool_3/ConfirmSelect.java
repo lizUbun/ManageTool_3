@@ -109,6 +109,7 @@ public class ConfirmSelect extends Activity {
         borrowProof.setBorrower(confirmSelectActivitySelectedToolManUnitName.getText().toString());
         borrowProof.setGiver(confirmSelectActivityGiveToolsManName.getText().toString());
         borrowProof.setBorrowTime(confirmSelectActivitySelectedGiveTime.getText().toString());
+        borrowProof.setBorrowState(AllDataControl.BORROW_PROOF_BORROWED);
         borrowProof.saveThrows();
         // debug
 //        Toast.makeText(this, "borrow : " + id, Toast.LENGTH_SHORT).show();

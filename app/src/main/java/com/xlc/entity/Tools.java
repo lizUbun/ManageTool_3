@@ -21,6 +21,16 @@ public class Tools extends DataSupport {
     private String remark;
     private Integer id;
 
+    public String getTool_state() {
+        return tool_state;
+    }
+
+    public void setTool_state(String tool_state) {
+        this.tool_state = tool_state;
+    }
+
+    private String tool_state;
+
     public int getId_second() {
         return id_second;
     }

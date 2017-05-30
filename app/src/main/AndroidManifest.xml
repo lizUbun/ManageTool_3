@@ -20,21 +20,27 @@
         </activity>
         <activity
             android:name=".LookActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:label="@string/title_activity_look" />
         <activity
             android:name=".DatabaseView"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:label="@string/title_activity_database_view" />
         <activity
             android:name=".EditView"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:label="@string/title_activity_edit_view" />
         <activity
             android:name=".BorrowListActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:label="@string/title_activity_borrow_list" />
         <activity
             android:name=".ConfirmBack"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:label="@string/title_activity_confirm_back" />
         <activity
             android:name=".ConfirmSelect"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:label="@string/title_activity_confirm_select" />
 
     </application>

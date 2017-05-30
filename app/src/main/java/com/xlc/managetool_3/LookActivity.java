@@ -3,9 +3,12 @@ package com.xlc.managetool_3;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -91,6 +94,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_look);
         ButterKnife.bind(this);
+
         // init the var
         // 初始化相关变量
         initActivity();
@@ -281,16 +285,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
         Toast.makeText(LookActivity.this, "total : " + total, Toast.LENGTH_SHORT).show();
 
-//        // 4. show the first page
-//        if (total > 8) {
-//            for (int i = 0; i < 8; i++) {
-//                lookTextList.get(i).setText(allTools.get(i).getName());
-//            }
-//        } else {
-//            for (int i = 0; i < total; i++) {
-//                lookTextList.get(i).setText(allTools.get(i).getName());
-//            }
-//        }
         // init content
         initGraphic();
         // 5. page number
@@ -414,10 +408,16 @@ public class LookActivity extends Activity implements View.OnClickListener {
         if (drawable == drawableList.get(1)) {
             drawable = drawableList.get(0);
             v.setBackground(drawable);
-        } else if (drawable == drawableList.get(0)) {
+            toolPicView.setImageResource(R.drawable.tn);
+            return;
+        }
+        if (drawable == drawableList.get(0)) {
             drawable = drawableList.get(1);
             v.setBackground(drawable);
+            toolPicView.setImageResource(R.drawable.t3);
+            return;
         }
+
     }
 
     // when make sure that select tool over in this page
@@ -432,6 +432,8 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // 是否重复添加
         boolean repeatInsert = false;
         for (int i = 0 ;i < lookTextList.size();i++){
+            // if be selected mean background is green
+            // 背景为绿色
             if (lookTextList.get(i).getBackground() == drawableList.get(1)){
                 // i mean : selected
                 // i 代表被选中的工具
@@ -446,7 +448,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
                     repeatInsert = true;
 //                    Toast.makeText(this, "你试图重复添加工具，被拒绝", Toast.LENGTH_SHORT).show();
                 }
-
             }
         }
         // tell the user that you had add tools
@@ -467,6 +468,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // 显示被选中的工具总数
         toolCarAmountDisplay.setText(" " + SelectedToolCar.toolListInCar.size());
     }
+
 
     // whether the one list is include the second
     // 判断第一个数组是否包含第二个元素

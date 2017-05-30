@@ -13,6 +13,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/*
+     list the need borrow tools
+     列出需要借用的工具
+ */
 public class BorrowListActivity extends Activity {
 
     @BindView(R.id.borrow_list_activity_borrow_back_button)
@@ -124,6 +128,7 @@ public class BorrowListActivity extends Activity {
                 " 借用人/单位 ：" + borrowProof.getBorrower() +
                 " 发放人 ：" + borrowProof.getGiver() +
                 " 借出时间 ：" + borrowProof.getBorrowTime();
+
     }
 
     @OnClick(R.id.borrow_list_activity_borrow_back_button)
