@@ -8,6 +8,11 @@ import org.litepal.crud.DataSupport;
  */
 
 public class BorrowProof extends DataSupport {
+    // borrow state
+    // 借用借条的状态
+    public static final String BORROW_PROOF_BORROWED = "borrowed";
+    public static final String BORROW_PROOF_GIVE_BACK = "give_back";
+    public static final String BORROW_PROOF_GIVE_PART_BACK = "give_part_back";
     @Column
     Integer id;
 

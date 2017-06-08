@@ -173,7 +173,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
         });
 
 
-
     }
 
     // touch and show animation
@@ -403,21 +402,56 @@ public class LookActivity extends Activity implements View.OnClickListener {
     // 所有显示数据的text view 的点击监听
     @Override
     public void onClick(View v) {
+        int clickId = 0;
+        switch (v.getId()){
+            case R.id.look_activity_look_text1 : clickId = 1;break;
+            case R.id.look_activity_look_text2 : clickId = 2;break;
+            case R.id.look_activity_look_text3 : clickId = 3;break;
+            case R.id.look_activity_look_text4 : clickId = 4;break;
+            case R.id.look_activity_look_text5 : clickId = 5;break;
+            case R.id.look_activity_look_text6 : clickId = 6;break;
+            case R.id.look_activity_look_text7 : clickId = 7;break;
+            case R.id.look_activity_look_text8 : clickId = 8;break;
+        }
+        showPhotoByClickId(clickId,toolPicView);
         // change the background color
         // 改变被选择的text view的背景颜色
+        // 0 : white , 1 : green
         if (drawable == drawableList.get(1)) {
             drawable = drawableList.get(0);
             v.setBackground(drawable);
-            toolPicView.setImageResource(R.drawable.tn);
+//            toolPicView.setImageResource(R.drawable.tn);
             return;
         }
         if (drawable == drawableList.get(0)) {
             drawable = drawableList.get(1);
             v.setBackground(drawable);
-            toolPicView.setImageResource(R.drawable.t3);
+//            toolPicView.setImageResource(R.drawable.t3);
             return;
         }
+        else {
+            v.setBackground(drawableList.get(1));
+        }
 
+    }
+
+    /*
+            show the clicked tool's photo
+            显示点击的工具的图片
+     */
+    public void showPhotoByClickId(int clickId,ImageView imageView) {
+        imageView.setImageResource(R.drawable.t4);
+        Tools tool = getToolsByPageAndId(page,clickId);
+    }
+
+    /*
+            get the tool object by the page number and click id
+            获取指定页数的指定叙述的tool对象
+     */
+    public Tools getToolsByPageAndId(int page, int clickId) {
+        Tools tool = null;
+
+        return tool;
     }
 
     // when make sure that select tool over in this page
@@ -490,14 +524,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         ArrayList<String> content = new ArrayList<>();
         for (int i = 0; i < tools.size(); i++) {
             Tools t = tools.get(i);
-            content.add("ID: " + t.getId_second()
-                    + " " + t.getName()
-                    + " 品牌 ： " + t.getBrand()
-                    + " 型号： " + t.getType()
-                    + " 材质：" + t.getMaterial()
-                    + " 制式：" + t.getStandard()
-                    + " 尺寸：" + t.getSize()
-                    + " 备注：" + t.getRemark());
+            content.add(getToolContent(t));
             if (i < 8) {
                 lookTextList.get(i).setText(content.get(i));
             }
@@ -509,6 +536,18 @@ public class LookActivity extends Activity implements View.OnClickListener {
                 lookTextList.get(i).setText("");
             }
         }
+    }
+    public static String getToolContent(Tools t){
+        String str = " " + "ID: "
+            + t.getId_second()
+            + " " + t.getName()
+            + " 品牌 ： " + t.getBrand()
+            + " 型号： " + t.getType()
+            + " 材质：" + t.getMaterial()
+            + " 制式：" + t.getStandard()
+            + " 尺寸：" + t.getSize()
+            + " 备注：" + t.getRemark();
+        return str;
     }
 }
 
@@ -528,4 +567,9 @@ public class LookActivity extends Activity implements View.OnClickListener {
     * next step deal with the data transfer between
     * look activity and confirm select activity
     * 下一步解决数据共享的问题，在两个activity之间
+    *
+
+    2017.06.06
+    * click the item and show the photo
+    * 点击工具条目，显示相应的图片
  */

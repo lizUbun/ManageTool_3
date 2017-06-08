@@ -21,6 +21,16 @@ public class Tools extends DataSupport {
     private String remark;
     private Integer id;
 
+    public Integer getPictur_id() {
+        return pictur_id;
+    }
+
+    public void setPictur_id(Integer pictur_id) {
+        this.pictur_id = pictur_id;
+    }
+
+    private Integer pictur_id;
+
     public String getTool_state() {
         return tool_state;
     }

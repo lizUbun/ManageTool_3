@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.xlc.entity.SelectedToolCar;
+import com.xlc.entity.Tools;
+
 import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import butterknife.BindView;
@@ -58,6 +62,17 @@ public class BorrowListActivity extends Activity {
     ArrayList<Drawable> drawableList = null;
     Drawable drawable;
 
+    // page now
+    // 当前页数
+    int page = 1;
+    //  total page
+    //  总共页数
+    int totalPage = 1;
+
+    // borrow tool
+    // 借用工具
+    ArrayList<Tools>  borrowTools = SelectedToolCar.toolListInCar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,18 +106,20 @@ public class BorrowListActivity extends Activity {
 
         // display the borrow proof
         // 显示借用清单
-        displayBorrowProof(textList,borrowProofList);
+        displayBorrowProof(textList,borrowProofList,borrowTools);
 
         // add listener
         // 添加监听器
         textListener = new TextListener();
         setOnClickListener(textList,textListener);
 
-        //
+        //  calculate the page
+        //  计算页数
         if (borrowProofList.size() < 8){
             borrowListActivityBorrowPageNumberTextView.setText("1");
         }else {
-            borrowListActivityBorrowPageNumberTextView.setText(" " + borrowProofList.size() / 8);
+            borrowListActivityBorrowPageNumberTextView.setText(page + " / " + borrowProofList.size() / 8);
+            totalPage = borrowProofList.size() / 8;
         }
     }
 
@@ -114,9 +131,10 @@ public class BorrowListActivity extends Activity {
 
     // display the borrow proof
     // 显示借用清单
-    public static void displayBorrowProof(ArrayList<TextView> display,ArrayList<BorrowProof> content) {
+    public static void displayBorrowProof(ArrayList<TextView> display,ArrayList<BorrowProof> content,ArrayList<Tools> tool) {
         for (int i = 0 ;i < display.size();i++){
             String str = getFormatBorrowProof(content.get(i));
+            str = str + " " + LookActivity.getToolContent(tool.get(i));
             display.get(i).setText(str);
         }
     }
@@ -124,10 +142,20 @@ public class BorrowListActivity extends Activity {
     // format the borrow proof display text
     // 格式化借条显示格式
     private static String getFormatBorrowProof(BorrowProof borrowProof) {
+        String state = "" ;
+        if (borrowProof.getBorrowState() != null) {
+            if (borrowProof.getBorrowState().equals(BorrowProof.BORROW_PROOF_BORROWED)) {
+                state = "已经借出";
+            }
+            if (borrowProof.getBorrowState().equals(BorrowProof.BORROW_PROOF_GIVE_BACK)) {
+                state = "已经归还";
+            }
+        }
         return " id : " + borrowProof.getId() +
                 " 借用人/单位 ：" + borrowProof.getBorrower() +
                 " 发放人 ：" + borrowProof.getGiver() +
-                " 借出时间 ：" + borrowProof.getBorrowTime();
+                " 借出时间 ：" + borrowProof.getBorrowTime() +
+                state;
 
     }
 
@@ -149,11 +177,21 @@ public class BorrowListActivity extends Activity {
     }
 
     private void nextPage() {
-
+        if (page < totalPage){
+            page ++ ;
+        }
+        if (page >= totalPage){
+            page = totalPage;
+        }
+        borrowListActivityBorrowPageNumberTextView.setText(page + " / " + totalPage );
     }
 
     private void lastPage() {
-
+        page --;
+        if (page <= 0){
+            page = 1;
+        }
+        borrowListActivityBorrowPageNumberTextView.setText(page + " / " + totalPage );
     }
 
     private class TextListener implements View.OnClickListener{
@@ -164,6 +202,9 @@ public class BorrowListActivity extends Activity {
             // 0 : white
             // weather : 天气
             // whether ; 是否
+            //  only keep one selected
+            // 始终保持只有一个被选中
+            initTextViewBackground();
             if (drawable == drawableList.get(1)) {
                 drawable = drawableList.get(0);
                 v.setBackground(drawable);
@@ -171,6 +212,15 @@ public class BorrowListActivity extends Activity {
                 drawable = drawableList.get(1);
                 v.setBackground(drawable);
             }
+        }
+    }
+
+
+    //  make the background to white
+    //  将背景变为白色
+    private void initTextViewBackground() {
+        for (int i = 0 ; i < textList.size();i++){
+            textList.get(i).setBackground(drawableList.get(0));
         }
     }
 }
