@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xlc.entity.SelectedToolCar;
 import com.xlc.entity.Tools;
@@ -52,23 +53,19 @@ public class BorrowListActivity extends Activity {
     // 存放显示栏的list
     ArrayList<TextView> textList = new ArrayList<>();
     ArrayList<BorrowProof> borrowProofList;
-
     // text view listener
     // 文本显示监听器
     View.OnClickListener textListener;
-
     // text view background color
     // 工具显示文字栏的背景颜色
     ArrayList<Drawable> drawableList = null;
     Drawable drawable;
-
     // page now
     // 当前页数
     int page = 1;
     //  total page
     //  总共页数
     int totalPage = 1;
-
     // borrow tool
     // 借用工具
     ArrayList<Tools>  borrowTools = SelectedToolCar.toolListInCar;
@@ -81,6 +78,7 @@ public class BorrowListActivity extends Activity {
         borrowProofList = (ArrayList) DataSupport.findAll(BorrowProof.class);
 
         // init view
+        // 初始化
         init();
 
         // debug
@@ -121,12 +119,27 @@ public class BorrowListActivity extends Activity {
             borrowListActivityBorrowPageNumberTextView.setText(page + " / " + borrowProofList.size() / 8);
             totalPage = borrowProofList.size() / 8;
         }
+
+
+        // debug
+        String str = "";
+        str += " borrow tools amount : " +  borrowTools.size();
+        int  s = SelectedToolCar.toolListInCar.size();
+
+        str = " tool car : " + s;
+        str = "";
+        for (int i = 0 ;i < SelectedToolCar.toolListInCar.size() ;i ++){
+            str += SelectedToolCar.toolListInCar.get(i).getName() + " ; ";
+        }
+        borrowListActivityBorrowText8.setText(str);
     }
 
     private void setOnClickListener(ArrayList<TextView> textList, View.OnClickListener textListener) {
         for (int i = 0; i < textList.size();i++){
             textList.get(i).setOnClickListener(textListener);
         }
+
+
     }
 
     // display the borrow proof
@@ -134,7 +147,7 @@ public class BorrowListActivity extends Activity {
     public static void displayBorrowProof(ArrayList<TextView> display,ArrayList<BorrowProof> content,ArrayList<Tools> tool) {
         for (int i = 0 ;i < display.size();i++){
             String str = getFormatBorrowProof(content.get(i));
-            str = str + " " + LookActivity.getToolContent(tool.get(i));
+//            str = str + " " + LookActivity.getToolContent(tool.get(i));
             display.get(i).setText(str);
         }
     }
@@ -164,7 +177,6 @@ public class BorrowListActivity extends Activity {
         Intent intent = new Intent(BorrowListActivity.this, ConfirmBack.class);
         startActivity(intent);
     }
-
 
     @OnClick({R.id.borrow_list_activity_borrow_list_last_page_button, R.id.borrow_list_activity_borrow_list_next_page_button})
     public void onViewClicked(View view) {
@@ -214,7 +226,6 @@ public class BorrowListActivity extends Activity {
             }
         }
     }
-
 
     //  make the background to white
     //  将背景变为白色

@@ -8,6 +8,10 @@ public class AllDataControl {
     // 定义需要显示的工具条目
     public static ArrayList<Tools> display = new ArrayList<>();
 
+    // define the all data array list
+    // 定义所有工具存放的列表
+    public static ArrayList<Tools> allToolsList = new ArrayList<>();
+
     // borrow state
     // 借用借条的状态
     public static final String BORROW_PROOF_BORROWED = "borrowed";

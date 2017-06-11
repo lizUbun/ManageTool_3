@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -99,6 +100,9 @@ public class MainActivity extends Activity {
 //                buffer.append(s + " ");
             }
 
+            // load picture
+            initToolPic();
+
             debugText.setTextSize(28);
 //            debugText.setText(buffer);
 
@@ -108,6 +112,43 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
     }
+
+    private void initToolPic() {
+        // init the photo
+        ArrayList<Integer> photoList = new ArrayList<>();
+//        photoList.add(R.drawable.t1);
+//        photoList.add(R.drawable.t2);
+//        photoList.add(R.drawable.t3);
+//        photoList.add(R.drawable.t4);
+//        photoList.add(R.drawable.t5);
+
+
+        //获取drawable文件名列表，不包含扩展名
+        Field[] fields = R.drawable.class.getDeclaredFields();
+        for(Field field:fields){
+        	/*获取文件名对应的系统生成的id
+        	需指定包路径 getClass().getPackage().getName()
+        	指定资源类型drawable*/
+        	if (field.getName().startsWith("t") && !field.getName().endsWith("n")) {
+                int resID = getResources().getIdentifier(field.getName(),
+                        "drawable", getClass().getPackage().getName());
+                photoList.add(resID);
+                System.out.println("fileName = " + field.getName()
+                        + "    resId = " + resID);
+                debugText.setText("fileName = " + field.getName()
+                        + "    resId = " + resID);
+            }
+        }
+
+        // add picture for tools
+        // 为工具添加图片
+        ArrayList<Tools> toolsList = (ArrayList) DataSupport.findAll(Tools.class);
+        for (int i = 0;i < photoList.size();i++){
+            toolsList.get(i).setPictur_id(photoList.get(i));
+            toolsList.get(i).saveThrows();
+        }
+    }
+
 
     // read line by line to deal
     // 读取每一行数据，并且加载到数据库

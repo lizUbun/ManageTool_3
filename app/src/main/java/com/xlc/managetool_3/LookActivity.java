@@ -264,9 +264,12 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // 1.get all the tool info from the database
         allTools = (ArrayList<Tools>) DataSupport.findAll(Tools.class);
         if (allTools.size() < 8) {
-            AllDataControl.display = (ArrayList) DataSupport.findAll(Tools.class);
+//            AllDataControl.display = (ArrayList) DataSupport.findAll(Tools.class);
+            AllDataControl.display = allTools;
         }else {
-            AllDataControl.display = (ArrayList) DataSupport.findAll(Tools.class).subList(0,8);
+            for (int i = 0;i < 8;i ++){
+                AllDataControl.display.add(allTools.get(i));
+            }
         }
 
         // 2. get the amount of list
@@ -383,9 +386,20 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // init the background color
         initTextViewBackground();
 
+        // initial data
+        // 初始化数据
+        initData();
+
+
+    }
+
+    private void initData() {
         // init the selected tool
         // 初始化被选中的工具的索引
         selected = new ArrayList<>();
+
+        AllDataControl.allToolsList = (ArrayList<Tools>)DataSupport.findAll(Tools.class);
+
 
     }
 
@@ -440,8 +454,21 @@ public class LookActivity extends Activity implements View.OnClickListener {
             显示点击的工具的图片
      */
     public void showPhotoByClickId(int clickId,ImageView imageView) {
-        imageView.setImageResource(R.drawable.t4);
+
         Tools tool = getToolsByPageAndId(page,clickId);
+        String str = "";
+//        str += " all data size : " + AllDataControl.allToolsList.size();
+//        AllDataControl.allToolsList.get(1);
+//        str = " click : " + clickId;
+        if (clickId <= AllDataControl.allToolsList.size()){
+            int id = AllDataControl.allToolsList.get(clickId - 1).getPictur_id();
+            imageView.setImageResource(id);
+        }
+
+//        for (int i = 0 ;i < AllDataControl.allToolsList.size();i++){
+//            str += " " + AllDataControl.allToolsList.get(i).getPictur_id() + ",";
+//        }
+//        lookText8.setText(str);
     }
 
     /*
@@ -450,7 +477,14 @@ public class LookActivity extends Activity implements View.OnClickListener {
      */
     public Tools getToolsByPageAndId(int page, int clickId) {
         Tools tool = null;
-
+//        if (page <= 1) {
+//            tool = (Tools) DataSupport.find(Tools.class, clickId);
+//        }
+//
+//        if (tool == null){
+//            tool = (Tools)DataSupport.find(Tools.class,1);
+//        }
+//        tool = (Tools)DataSupport.findAll(Tools.class,3);
         return tool;
     }
 
@@ -572,4 +606,9 @@ public class LookActivity extends Activity implements View.OnClickListener {
     2017.06.06
     * click the item and show the photo
     * 点击工具条目，显示相应的图片
+    *
+
+    2017.06.11
+    * tool save and display by page number
+    * 工具根据页码进行存放和显示
  */
