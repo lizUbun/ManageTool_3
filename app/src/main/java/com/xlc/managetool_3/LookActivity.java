@@ -26,6 +26,7 @@ import com.xlc.entity.Tools;
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -65,8 +66,11 @@ public class LookActivity extends Activity implements View.OnClickListener {
     ArrayList<TextView> lookTextList;
     TextView pageNumber;
     // the number of page
-    // 代表有多少页
-    int page = 0;
+    // 代表现在是第几页
+    int page = 1;
+    // the total page
+    // 总共有多少页
+    int totalPage = 0;
     // the record of data
     int total = 0;
     // all the tools record
@@ -161,7 +165,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // 通过触屏选择数据
         addTextViewListener(lookTextList);
 
-
         // image view of the tools
         // touch and show big not touch small
         // 点击图片实现动画
@@ -172,7 +175,6 @@ public class LookActivity extends Activity implements View.OnClickListener {
             }
         });
 
-
     }
 
     // touch and show animation
@@ -181,6 +183,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         toolPicView.startAnimation(animation);
     }
 
+    // turn to the confirm activity
     private void selectOverListener() {
         // clear the empty element
         // 将选择的数组中空的数据去除
@@ -201,45 +204,35 @@ public class LookActivity extends Activity implements View.OnClickListener {
     }
 
     private void lastPageListener() {
-        page--;
-        int max = total / 8;
-        // if the total < 8 than the page = 1
-        // 如果工具数量小于8，则只有一页
-        if (total <= 8){
+        if (page <= 1){
             page = 1;
-            max = 1;
+            Toast.makeText(this, "first page ... 第一页", Toast.LENGTH_SHORT).show();
+        }else {
+            page--;
         }
-        pageNumber.setText(page + " / " + max);
-
+        pageNumber.setText(getPageString(page));
         // show the data according to the page
         // 根据页码显示数据
+//        if (allTools.size() == 0){
+//            Toast.makeText(this, "all tool is empty ... ", Toast.LENGTH_SHORT).show();
+//        }
         showDataAccordPage(lookTextList, allTools, page);
-
         // init background color
         // 初始化工具显示背景的颜色
         initTextViewBackground();
     }
 
     private void nextPageListener() {
-        // judge the page range
-        // 判断page范围
-        int max = total / 8;
-        page++;
-        if (page > max) {
-            page = max;
+        if (page >= totalPage){
+            page = totalPage;
+            Toast.makeText(this, "last page ... 最后一页", Toast.LENGTH_SHORT).show();
+        }else {
+            page++;
         }
-        // if the total < 8 than the page = 1
-        // 如果工具数量小于8，则只有一页
-        if (total <= 8){
-            page = 1;
-            max = 1;
-        }
-        pageNumber.setText(page + " / " + max);
-
+        pageNumber.setText(getPageString(page));
         // show the data according to the page
         // 根据页码显示数据
         showDataAccordPage(lookTextList, allTools, page);
-
         // init background color
         //  初始化显示的背景颜色
         initTextViewBackground();
@@ -290,7 +283,7 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // init content
         initGraphic();
         // 5. page number
-        int max = total / 8;
+        int max = total / 8 + 1;
         // if the total < 8 than the page = 1
         // 如果工具数量小于8，则只有一页
         if (total <= 8){
@@ -331,22 +324,68 @@ public class LookActivity extends Activity implements View.OnClickListener {
 
     // show the data according to the page
     // 根据页码显示数据
-    private void showDataAccordPage(ArrayList<TextView> lookTextList, ArrayList<Tools> allTools, int page) {
-        // 0. add the data 8 times in for loop
-        if (page == 1){
-            Toast.makeText(this, "only one page 只有一页", Toast.LENGTH_SHORT).show();
-        }else {
+    public void showDataAccordPage(ArrayList<TextView> lookTextList, ArrayList<Tools> allTools, int page) {
+        AllDataControl.allToolsList = (ArrayList<Tools>)DataSupport.findAll(Tools.class);
+        // 1. according to the page select the data
+        // 根据页码选择数据
+//        AllDataControl.display.clear();
+//        AllDataControl.display = getListByPage(allTools,page);
+        if (page == 1) {
+            AllDataControl.display = AllDataControl.allToolsList;
             for (int i = 0; i < 8; i++) {
-                // 1. according to the page select the data
-                // 根据页码选择数据
-            /*
-                page : 1,2,3,4,5,6,
-                index: 0,9,17,25
-             */
-                lookTextList.get(i).setText(allTools.get((page - 1) * 8 + i).getName() + " ++++");
+        /*
+            page : 1,2,3,4,5,6,
+            index: 0,9,17,25
+         */
+//                lookTextList.get(i).setText(AllDataControl.display.get(i).getName() + " , ");
+                if (AllDataControl.allToolsList.isEmpty()) {
+                    Toast.makeText(this, "the display list is empty ... ", Toast.LENGTH_SHORT).show();
+                    for (int j = 0; j < 8; j++) {
+                        lookTextList.get(j).setText(" no tool to display ... ");
+                    }
+                    break;
+                }
+//                Toast.makeText(this, "page is 1 ... ", Toast.LENGTH_SHORT).show();
+                String str = getToolContent(AllDataControl.display.get(i));
+                lookTextList.get(i).setText(str);
             }
         }
 
+        if (page >= 2){
+            AllDataControl.display.clear();
+            for (int i = 0 ; i < 8;i ++) {
+                if (AllDataControl.allToolsList.size() > i + (page - 1) * 8 ){
+                    AllDataControl.display.add(AllDataControl.allToolsList.get(i + (page - 1) * 8 ));
+                    String str2 = getToolContent(AllDataControl.display.get(i));
+                    lookTextList.get(i).setText(str2);
+                }else {
+                    lookTextList.get(i).setText("");
+                }
+            }
+        }
+
+    }
+
+
+    // get the array list of the page
+    // 获取指定的工具数组
+    public static ArrayList<Tools> getListByPage(ArrayList<Tools> allTools, int page) {
+        ArrayList<Tools> tempList = allTools;
+        if (page == 1){
+            tempList.clear();
+            for (int i = 0 ;i < 8;i++){
+                tempList.add(allTools.get(i));
+            }
+        }
+        if (page == 2){
+            tempList.clear();
+            for (int i = 0 ;i < 8;i++) {
+                if (allTools.size() > i + 7) {
+                    tempList.add(allTools.get(i + 7));
+                }
+            }
+        }
+        return allTools;
     }
 
     // add the text view into array list
@@ -371,12 +410,8 @@ public class LookActivity extends Activity implements View.OnClickListener {
         lookTextList.add(lookText7);
         lookTextList.add(lookText8);
 
-        pageNumber.setText("1 / " + total / 8);
-        // if the total < 8 than the page = 1
-        // 如果工具数量小于8，则只有一页
-        if (total <= 8){
-            pageNumber.setText("1 / 1" );
-        }
+        pageNumber.setText(getPageString(1));
+
         // button
         nextPage = (Button) findViewById(R.id.look_activity_look_next_page);
         lastPage = (Button) findViewById(R.id.look_activity_look_last_page);
@@ -390,16 +425,14 @@ public class LookActivity extends Activity implements View.OnClickListener {
         // 初始化数据
         initData();
 
-
     }
 
     private void initData() {
         // init the selected tool
         // 初始化被选中的工具的索引
         selected = new ArrayList<>();
-
         AllDataControl.allToolsList = (ArrayList<Tools>)DataSupport.findAll(Tools.class);
-
+        allTools = (ArrayList<Tools>)DataSupport.findAll(Tools.class);
 
     }
 
@@ -460,8 +493,14 @@ public class LookActivity extends Activity implements View.OnClickListener {
 //        str += " all data size : " + AllDataControl.allToolsList.size();
 //        AllDataControl.allToolsList.get(1);
 //        str = " click : " + clickId;
-        if (clickId <= AllDataControl.allToolsList.size()){
-            int id = AllDataControl.allToolsList.get(clickId - 1).getPictur_id();
+        if (page == 1) {
+            if (clickId <= AllDataControl.allToolsList.size()) {
+                int id = AllDataControl.allToolsList.get(clickId - 1).getPictur_id();
+                imageView.setImageResource(id);
+            }
+        }
+        if (page == 2){
+            int id = AllDataControl.allToolsList.get(clickId - 1 + 8).getPictur_id();
             imageView.setImageResource(id);
         }
 
@@ -581,6 +620,22 @@ public class LookActivity extends Activity implements View.OnClickListener {
             + " 制式：" + t.getStandard()
             + " 尺寸：" + t.getSize()
             + " 备注：" + t.getRemark();
+        return str;
+    }
+
+    // get the display page string by the page
+    // and default know the total tools amount
+    // 通过页码和已经默认知道的工具总数获取
+    // 页码显示栏中的需要显示的字符
+    public String getPageString(int page) {
+        String str = "";
+        if (total > 8){
+            totalPage = total / 8 + 1;
+        }
+        if (total < 8){
+            totalPage = 1;
+        }
+        str = page + " / " + totalPage;
         return str;
     }
 }

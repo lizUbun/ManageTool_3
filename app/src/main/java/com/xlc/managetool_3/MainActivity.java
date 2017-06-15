@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -113,32 +116,59 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void initToolPic() {
+    public void initToolPic() {
         // init the photo
         ArrayList<Integer> photoList = new ArrayList<>();
-//        photoList.add(R.drawable.t1);
-//        photoList.add(R.drawable.t2);
-//        photoList.add(R.drawable.t3);
-//        photoList.add(R.drawable.t4);
-//        photoList.add(R.drawable.t5);
-
 
         //获取drawable文件名列表，不包含扩展名
         Field[] fields = R.drawable.class.getDeclaredFields();
-        for(Field field:fields){
-        	/*获取文件名对应的系统生成的id
-        	需指定包路径 getClass().getPackage().getName()
-        	指定资源类型drawable*/
-        	if (field.getName().startsWith("t") && !field.getName().endsWith("n")) {
-                int resID = getResources().getIdentifier(field.getName(),
-                        "drawable", getClass().getPackage().getName());
-                photoList.add(resID);
-                System.out.println("fileName = " + field.getName()
-                        + "    resId = " + resID);
-                debugText.setText("fileName = " + field.getName()
-                        + "    resId = " + resID);
+        // sort of the file name
+        // 对文件名字进行排序，首字母是t，然后是序列号
+        String fn = "";
+        ArrayList<Integer> filleInt = new ArrayList<>();
+        FileNameOfResourceComparator comparator = new FileNameOfResourceComparator();
+        for (int i = 0;i < fields.length;i++){
+            String str = fields[i].getName();
+            if (str.startsWith("t") && !str.endsWith("n")){
+                str = str.substring(1);
+                int j = Integer.parseInt(str);
+                filleInt.add(j);
+//                fn += str + " , ";
             }
         }
+        ArrayList<String> fileNameOrder = new ArrayList<>();
+        Collections.sort(filleInt,comparator);
+        for (int i = 0 ;i < filleInt.size();i++){
+//            fn += filleInt.get(i) + " , ";
+            String s = "";
+            s = "t" + filleInt.get(i);
+            fileNameOrder.add(s);
+            fn += s + " , ";
+        }
+        debugText.setText(fn);
+        for (int i = 0 ;i < fileNameOrder.size();i++){
+                int resID = getResources().getIdentifier(fileNameOrder.get(i),
+                        "drawable", getClass().getPackage().getName());
+                photoList.add(resID);
+        }
+
+//        for(Field field:fields){
+//        	/*
+//        	获取文件名对应的系统生成的id
+//        	需指定包路径 getClass().getPackage().getName()
+//        	指定资源类型drawable
+//        	*/
+//        	if (field.getName().startsWith("t") && !field.getName().endsWith("n")) {
+//
+//                int resID = getResources().getIdentifier(field.getName(),
+//                        "drawable", getClass().getPackage().getName());
+//                photoList.add(resID);
+//                System.out.println("fileName = " + field.getName()
+//                        + "    resId = " + resID);
+////                debugText.setText("fileName = " + field.getName()
+////                        + "    resId = " + resID);
+//            }
+//        }
 
         // add picture for tools
         // 为工具添加图片
@@ -159,7 +189,7 @@ public class MainActivity extends Activity {
 //            sb.append(s[0] + "   ");
 //        }
         Tools t = new Tools();
-        t.setId_second(Integer.parseInt(s[0]));
+        t.setId_second(Integer.parseInt(s[0].trim(),10));
         t.setName(s[1]);
         t.setBrand(s[2]);
         t.setType(s[3]);
@@ -197,7 +227,23 @@ public class MainActivity extends Activity {
         user.setName(input_name);
         user.setPass_word(input_password);
         user.saveThrows();
+
+
+
     }
+
+    class FileNameOfResourceComparator implements Comparator{
+
+        @Override
+        public int compare(Object o1, Object o2) {
+            Integer i1 = (Integer)o1;
+            Integer i2 = (Integer)o2;
+            return i1.compareTo(i2);
+        }
+    }
+
+
+
 }
 
 /*
@@ -206,4 +252,9 @@ public class MainActivity extends Activity {
         4.1
         * add the user login record
         * 加入了用户登陆（无论成功或者失败）的记录
+        *
+
+        2017.06.14
+        * add the drawable picture name deal for loading and indexing the resource id
+        * 加入图片名称处理，为更好查询和加载
  */

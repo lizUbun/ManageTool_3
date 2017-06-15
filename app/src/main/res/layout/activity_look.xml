@@ -84,7 +84,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="上一页"
+        android:text="前一页"
         app:layout_constraintLeft_toRightOf="@+id/look_activity_look_page"
         app:layout_constraintTop_toBottomOf="@+id/look_activity_all_tool" />
 
@@ -95,7 +95,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="下一页"
+        android:text="后一页"
         app:layout_constraintLeft_toRightOf="@+id/look_activity_look_last_page"
         app:layout_constraintTop_toBottomOf="@+id/look_activity_show_databse" />
 
