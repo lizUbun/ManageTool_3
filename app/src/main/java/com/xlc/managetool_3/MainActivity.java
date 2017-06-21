@@ -42,6 +42,8 @@ public class MainActivity extends Activity {
     @BindView(R.id.debug_text)
     TextView debugText;
 
+    Button clearAll;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -57,6 +59,17 @@ public class MainActivity extends Activity {
         user = new HashMap<>();
         name = (EditText) findViewById(R.id.main_activity_name);
         pass_word = (EditText) findViewById(R.id.main_activity_pass_word);
+
+        clearAll = (Button)findViewById(R.id.clear_all);
+
+        clearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataSupport.deleteAll(BorrowProof.class);
+                Toast.makeText(MainActivity.this, "clear the borrow proof ... complete",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         sure.setOnClickListener(new View.OnClickListener() {

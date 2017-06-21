@@ -105,6 +105,11 @@ public class ConfirmSelect extends Activity {
         borrowProof.setGiver(confirmSelectActivityGiveToolsManName.getText().toString());
         borrowProof.setBorrowTime(confirmSelectActivitySelectedGiveTime.getText().toString());
         borrowProof.setBorrowState(AllDataControl.BORROW_PROOF_BORROWED);
+        ArrayList<Tools> borrowProofTools = new ArrayList<>();
+        for (int i = 0 ;i < SelectedToolCar.toolListInCar.size() ;i ++){
+            borrowProofTools.add(SelectedToolCar.toolListInCar.get(i));
+        }
+        borrowProof.setIncludeTools(borrowProofTools);
         borrowProof.saveThrows();
         // debug
 //        Toast.makeText(this, "borrow : " + id, Toast.LENGTH_SHORT).show();

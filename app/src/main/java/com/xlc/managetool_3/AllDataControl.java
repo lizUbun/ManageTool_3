@@ -12,6 +12,14 @@ public class AllDataControl {
     // 定义所有工具存放的列表
     public static ArrayList<Tools> allToolsList = new ArrayList<>();
 
+    // define the search result
+    // 定义搜索结果列表
+    public static ArrayList<Tools> searchResult = new ArrayList<Tools>();
+
+    // define the borrow proof
+    // 定义借用证明列表
+    public static ArrayList<BorrowProof> allBorrowProof = new ArrayList<>();
+
     // borrow state
     // 借用借条的状态
     public static final String BORROW_PROOF_BORROWED = "borrowed";

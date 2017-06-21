@@ -1,7 +1,11 @@
 package com.xlc.managetool_3;
 
+import com.xlc.entity.Tools;
+
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
 
 /**
  * Created by zlb on 2017/4/3.
@@ -117,4 +121,13 @@ public class BorrowProof extends DataSupport {
     String recevTime;
     String deviceState;
 
+    ArrayList<Tools> includeTools;
+
+    public ArrayList<Tools> getIncludeTools() {
+        return includeTools;
+    }
+
+    public void setIncludeTools(ArrayList<Tools> includeTools) {
+        this.includeTools = includeTools;
+    }
 }
